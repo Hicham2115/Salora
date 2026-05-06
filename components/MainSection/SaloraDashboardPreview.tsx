@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-// ─── Tokens (match SalonFlow brand) ───
+// ─── Tokens (match Salora brand) ───
 const COLORS = {
   primary: '#1B4332',
   primaryDeep: '#0D1B14',
@@ -243,7 +243,7 @@ function CalendarCell({ day }: { day: number | null }) {
 }
 
 // ─── Main Component ───
-export default function SalonFlowDashboardPreview() {
+export default function SaloraDashboardPreview() {
   const [activeNav, setActiveNav] = useState('dashboard');
 
   return (
@@ -433,7 +433,7 @@ export default function SalonFlowDashboardPreview() {
               fontWeight: 600,
             }}
           >
-            SalonFlow Dashboard
+            Salora Dashboard
           </div>
         </div>
 

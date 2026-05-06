@@ -35,7 +35,7 @@ export default function RootLayout({
       )}
     >
       <body className="bg-background">
-        <div className="sticky top-0">
+        <div className="sticky top-0 z-9999">
           <Navbar />
         </div>
 

@@ -31,7 +31,7 @@ const problems = [
 export default function TheProblem() {
   return (
     <section className="mt-17 bg-[#1c4232] px-6 py-24 text-white">
-      <div className="relative -top-17 mx-auto grid w-full max-w-5xl grid-cols-2 justify-items-center gap-4 md:grid-cols-4">
+      <div className="relative -top-17 mx-auto grid w-full max-w-6xl grid-cols-2 justify-items-center gap-4 md:grid-cols-4">
         <span className="flex items-center gap-3">
           <span className="rounded-md bg-white/20 p-2">
             <ShieldCheck size={16} />
