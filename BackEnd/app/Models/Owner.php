@@ -13,6 +13,7 @@ class Owner extends Model
         'salon_name',
         'salon_email',
         'salon_phone',
+        'salon_website',
         'salon_adresse',
         'salon_about',
     ];

@@ -9,3 +9,4 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::post('/create_salon', [SalonOwnerController::class, 'createSalon']);
+Route::get('/salon_data', [SalonOwnerController::class, 'SalonData']);
