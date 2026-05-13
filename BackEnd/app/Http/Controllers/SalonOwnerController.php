@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Owner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SalonOwnerController extends Controller
 {
@@ -15,9 +16,9 @@ class SalonOwnerController extends Controller
             'name' => 'required|string|min:2|max:100',
             'email' => 'required|email|unique:owners,salon_email',
             'phone' => 'required|string|min:10|max:20',
-            'website' => 'nullable|string|url',
+            'website' => 'sometimes|nullable|url',
             'address' => 'required|string|min:5|max:255',
-            'about' => 'nullable|string|min:10',
+            'about' => 'sometimes|nullable|string|min:10',
             'img' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
         try {
@@ -30,9 +31,9 @@ class SalonOwnerController extends Controller
                 'salon_name' => $validated['name'],
                 'salon_email' => $validated['email'],
                 'salon_phone' => $validated['phone'],
-                'salon_website' => $validated['website'],
+                'salon_website' => $validated['website'] ?? null,
                 'salon_adresse' => $validated['address'],
-                'salon_about' => $validated['about'],
+                'salon_about' => $validated['about'] ?? null,
                 'salon_logo' => $logoPath,
             ]);
 
@@ -66,6 +67,55 @@ class SalonOwnerController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to retrieve salon data',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateSalon(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|min:2|max:100',
+            'email' => 'required|email|unique:owners,salon_email,' . $request->id,
+            'phone' => 'required|string|min:10|max:20',
+            'website' => 'sometimes|nullable|url',
+            'address' => 'required|string|min:5|max:255',
+            'about' => 'sometimes|nullable|string|min:10',
+            'img' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        try {
+            $owner = Owner::find($request->id);
+            if (!$owner) {
+                return response()->json([
+                    'message' => 'Salon not found'
+                ], 404);
+            }
+
+            if ($request->hasFile('img')) {
+                // Delete old logo if exists
+                if ($owner->salon_logo) {
+                    Storage::disk('public')->delete($owner->salon_logo);
+                }
+                $logoPath = $request->file('img')->store('salon_logos', 'public');
+                $owner->salon_logo = $logoPath;
+            }
+
+            $owner->salon_name = $validated['name'];
+            $owner->salon_email = $validated['email'];
+            $owner->salon_phone = $validated['phone'];
+            $owner->salon_website = $validated['website'] ?? null;
+            $owner->salon_adresse = $validated['address'];
+            $owner->salon_about = $validated['about'] ?? null;
+            $owner->save();
+
+            return response()->json([
+                'message' => 'Salon updated successfully',
+                'data' => $owner
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update salon',
                 'error' => $e->getMessage()
             ], 500);
         }
