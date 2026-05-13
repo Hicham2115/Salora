@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OpeningHoursController;
 use App\Http\Controllers\SalonOwnerController;
 use App\Http\Controllers\StaffController;
@@ -25,3 +26,7 @@ Route::post('/create_staff', [StaffController::class, 'createStaff']);
 Route::get('/staff_data', [StaffController::class, 'StaffData']);
 Route::post('/update_staff', [StaffController::class, 'updateStaff']);
 Route::post('/delete_staff', [StaffController::class, 'deleteStaff']);
+// Notifications Routes
+Route::post('/create_notifications', [NotificationsController::class, 'createNotifications']);
+Route::get('/notifications_data', [NotificationsController::class, 'NotificationsData']);
+Route::post('/update_notifications', [NotificationsController::class, 'updateNotifications']);
