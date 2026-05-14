@@ -14,7 +14,17 @@ class Owner extends Model
         'salon_email',
         'salon_phone',
         'salon_website',
+        'salon_instagram',
         'salon_adresse',
         'salon_about',
+        'latitude',
+        'longitude',
+        'is_open',
+    ];
+
+    protected $casts = [
+        'latitude'  => 'float',
+        'longitude' => 'float',
+        'is_open'   => 'boolean',
     ];
 }

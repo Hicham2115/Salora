@@ -2,53 +2,16 @@
 
 import { Star } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
 
 interface Review {
   id: number
-  name: string
-  initials: string
-  date: string
-  rating: number
-  comment: string
+  reviewer_name: string
+  review_content: string
+  review_stars: number
+  created_at: string
 }
-
-const reviews: Review[] = [
-  {
-    id: 1,
-    name: "Hamza Alaoui",
-    initials: "HA",
-    date: "Apr 27",
-    rating: 5,
-    comment:
-      "Best barbershop in Casablanca. Youssef always nails my fade. Will never go anywhere else.",
-  },
-  {
-    id: 2,
-    name: "Rachid Filali",
-    initials: "RF",
-    date: "Apr 25",
-    rating: 5,
-    comment:
-      "Premium quality and always on time. The online booking is so convenient.",
-  },
-  {
-    id: 3,
-    name: "Said Mansouri",
-    initials: "SM",
-    date: "Apr 22",
-    rating: 4,
-    comment: "Great service, clean space. Amine did a great job with my beard.",
-  },
-  {
-    id: 4,
-    name: "Mehdi Chaoui",
-    initials: "MC",
-    date: "Apr 20",
-    rating: 5,
-    comment:
-      "Top tier. I've been coming here for 2 years and it only gets better.",
-  },
-]
 
 function StarRating({ rating, max = 5 }: { rating: number; max?: number }) {
   return (
@@ -80,25 +43,44 @@ function RatingBar({ count, total }: { count: number; total: number }) {
   )
 }
 
+function formatDate(str: string) {
+  return new Date(str).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+}
+
+function initials(name: string) {
+  return name
+    .trim()
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
+}
+
 export default function ReviewsPage() {
+  const { data: raw, isLoading } = useQuery({
+    queryKey: ["reviews_data"],
+    queryFn: async () => {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews_data`)
+      return res.data
+    },
+  })
+
+  const reviews: Review[] = Array.isArray(raw) ? raw : []
   const total = reviews.length
-  const average =
-    total > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / total : 0
+  const average = total > 0 ? reviews.reduce((s, r) => s + r.review_stars, 0) / total : 0
 
   const distribution = [5, 4, 3, 2, 1].map((star) => ({
     star,
-    count: reviews.filter((r) => r.rating === star).length,
+    count: reviews.filter((r) => r.review_stars === star).length,
   }))
 
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-black">
-          Reviews
-        </h1>
+        <h1 className="text-2xl font-bold tracking-tight text-black">Reviews</h1>
         <p className="text-sm text-black">
-          {total} {total === 1 ? "review" : "reviews"} · {average.toFixed(1)}{" "}
-          average rating
+          {total} {total === 1 ? "review" : "reviews"} · {average.toFixed(1)} average rating
         </p>
       </div>
 
@@ -127,24 +109,28 @@ export default function ReviewsPage() {
 
         {/* Review list */}
         <div className="flex flex-1 flex-col gap-3">
+          {isLoading && (
+            <p className="py-8 text-center text-sm text-muted-foreground">Loading reviews…</p>
+          )}
+          {!isLoading && reviews.length === 0 && (
+            <p className="py-8 text-center text-sm text-muted-foreground">No reviews yet.</p>
+          )}
           {reviews.map((review) => (
             <div key={review.id} className="rounded-xl border bg-card p-5">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-black">
-                    {review.initials}
+                    {initials(review.reviewer_name)}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-black">
-                      {review.name}
-                    </p>
-                    <p className="text-xs text-black">{review.date}</p>
+                    <p className="text-sm font-semibold text-black">{review.reviewer_name}</p>
+                    <p className="text-xs text-black">{formatDate(review.created_at)}</p>
                   </div>
                 </div>
-                <StarRating rating={review.rating} />
+                <StarRating rating={review.review_stars} />
               </div>
               <p className="mt-3 text-sm text-black italic">
-                "{review.comment}"
+                &ldquo;{review.review_content}&rdquo;
               </p>
             </div>
           ))}

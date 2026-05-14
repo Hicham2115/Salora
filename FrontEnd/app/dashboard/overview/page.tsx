@@ -1,11 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import {
   Monitor,
-  Clock,
-  TrendingUp,
   UserRound,
+  CalendarDays,
   ExternalLink,
   Plus,
   ChevronLeft,
@@ -15,107 +14,36 @@ import {
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useUser } from "@clerk/nextjs"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
+import Link from "next/link"
 import BookingPopUp from "@/components/BookingPopUp"
 
-const stats = [
-  {
-    icon: Monitor,
-    badge: "+2 vs yesterday",
-    badgeColor: "text-emerald-600 bg-emerald-50",
-    value: "6",
-    label: "Today's bookings",
-  },
-  {
-    icon: Clock,
-    badge: "↑ 18%",
-    badgeColor: "text-emerald-600 bg-emerald-50",
-    value: "560 MAD",
-    label: "Today's revenue",
-  },
-  {
-    icon: TrendingUp,
-    badge: "↑ 12%",
-    badgeColor: "text-emerald-600 bg-emerald-50",
-    value: "800 MAD",
-    label: "Week revenue",
-  },
-  {
-    icon: UserRound,
-    badge: "↑ 6%",
-    badgeColor: "text-emerald-600 bg-emerald-50",
-    value: "142",
-    label: "Active clients",
-    iconColor: "text-orange-400",
-  },
-]
-
-const appointments = [
-  {
-    time: "09:00",
-    name: "Hamza Alaoui",
-    service: "Haircut + Beard",
-    staff: "Youssef",
-    price: "120 MAD",
-    status: "confirmed",
-  },
-  {
-    time: "10:30",
-    name: "Karim Benali",
-    service: "Classic Haircut",
-    staff: "Youssef",
-    price: "60 MAD",
-    status: "confirmed",
-  },
-  {
-    time: "11:30",
-    name: "Omar Tahiri",
-    service: "Premium Shave",
-    staff: "Amine",
-    price: "80 MAD",
-    status: "pending",
-  },
-  {
-    time: "14:00",
-    name: "Mehdi Chaoui",
-    service: "Beard Styling",
-    staff: "Youssef",
-    price: "60 MAD",
-    status: "confirmed",
-  },
-  {
-    time: "15:00",
-    name: "Said Mansouri",
-    service: "Haircut",
-    staff: "Amine",
-    price: "60 MAD",
-    status: "confirmed",
-  },
-  {
-    time: "16:00",
-    name: "Rachid Filali",
-    service: "Full Grooming",
-    staff: "Youssef",
-    price: "180 MAD",
-    status: "confirmed",
-  },
-]
-
-const BOOKED_DAYS = new Set([2, 3, 8, 10, 14, 17])
+interface Booking {
+  id: number
+  client_name: string
+  phone: string | null
+  service: string
+  staff: string
+  date: string // YYYY-MM-DD
+  time: string
+  duration: number
+  price: number
+  status: "confirmed" | "cancelled"
+  notes: string | null
+}
 
 const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
 ]
+
+function localDateStr(d: Date) {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${y}-${m}-${day}`
+}
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -133,10 +61,107 @@ function getCalendarDays(year: number, month: number) {
 
 export default function OverviewPage() {
   const today = new Date()
+  const todayStr = localDateStr(today)
   const [calYear, setCalYear] = useState(today.getFullYear())
   const [calMonth, setCalMonth] = useState(today.getMonth())
   const { user } = useUser()
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  const { data: bookingsRaw } = useQuery({
+    queryKey: ["bookings_data"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings_data`
+      )
+      return res.data
+    },
+  })
+
+  const { data: clientsRaw } = useQuery({
+    queryKey: ["clients_data"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/clients_data`
+      )
+      return res.data
+    },
+  })
+
+  const bookings: Booking[] = Array.isArray(bookingsRaw) ? bookingsRaw : []
+  const totalClients: number = Array.isArray(clientsRaw) ? clientsRaw.length : 0
+
+  // Week bounds (Mon–Sun)
+  const weekBounds = useMemo(() => {
+    const d = new Date(today)
+    const dow = d.getDay()
+    const mondayOffset = dow === 0 ? -6 : 1 - dow
+    const mon = new Date(d)
+    mon.setDate(d.getDate() + mondayOffset)
+    const sun = new Date(mon)
+    sun.setDate(mon.getDate() + 6)
+    return { start: localDateStr(mon), end: localDateStr(sun) }
+  }, [])
+
+  const todaysBookings = useMemo(
+    () =>
+      bookings
+        .filter((b) => b.date.substring(0, 10) === todayStr && b.status === "confirmed")
+        .sort((a, b) => a.time.localeCompare(b.time)),
+    [bookings, todayStr]
+  )
+
+  const weekCount = useMemo(
+    () =>
+      bookings.filter(
+        (b) =>
+          b.date.substring(0, 10) >= weekBounds.start &&
+          b.date.substring(0, 10) <= weekBounds.end &&
+          b.status === "confirmed"
+      ).length,
+    [bookings, weekBounds]
+  )
+
+  const bookedDays = useMemo(
+    () =>
+      new Set(
+        bookings
+          .filter((b) => {
+            const d = new Date(b.date)
+            return (
+              d.getFullYear() === calYear &&
+              d.getMonth() === calMonth &&
+              b.status === "confirmed"
+            )
+          })
+          .map((b) => new Date(b.date).getDate())
+      ),
+    [bookings, calYear, calMonth]
+  )
+
+  const stats = [
+    {
+      icon: Monitor,
+      value: todaysBookings.length,
+      label: "Today's bookings",
+      badge: `${todaysBookings.length} confirmed`,
+      badgeColor: "text-emerald-600 bg-emerald-50",
+    },
+    {
+      icon: CalendarDays,
+      value: weekCount,
+      label: "This week",
+      badge: `Mon – Sun`,
+      badgeColor: "text-blue-600 bg-blue-50",
+    },
+    {
+      icon: UserRound,
+      value: totalClients,
+      label: "Active clients",
+      badge: `${totalClients} total`,
+      badgeColor: "text-orange-600 bg-orange-50",
+      iconColor: "text-orange-400",
+    },
+  ]
 
   const { offset, daysInMonth } = getCalendarDays(calYear, calMonth)
   const totalCells = Math.ceil((offset + daysInMonth) / 7) * 7
@@ -153,17 +178,13 @@ export default function OverviewPage() {
   })
 
   function prevMonth() {
-    if (calMonth === 0) {
-      setCalYear((y) => y - 1)
-      setCalMonth(11)
-    } else setCalMonth((m) => m - 1)
+    if (calMonth === 0) { setCalYear((y) => y - 1); setCalMonth(11) }
+    else setCalMonth((m) => m - 1)
   }
 
   function nextMonth() {
-    if (calMonth === 11) {
-      setCalYear((y) => y + 1)
-      setCalMonth(0)
-    } else setCalMonth((m) => m + 1)
+    if (calMonth === 11) { setCalYear((y) => y + 1); setCalMonth(0) }
+    else setCalMonth((m) => m + 1)
   }
 
   return (
@@ -176,21 +197,15 @@ export default function OverviewPage() {
             <span className="text-primary">✦</span>
           </h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
-            {dateStr} · {appointments.length} appointments today
+            {dateStr} · {todaysBookings.length} appointments today
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            className="cursor-pointer gap-2 bg-white py-5"
-          >
+          <Button variant="outline" className="cursor-pointer gap-2 bg-white py-5">
             <ExternalLink size={15} />
             View public page
           </Button>
-          <Button
-            className="cursor-pointer gap-2 py-5"
-            onClick={() => setDialogOpen(true)}
-          >
+          <Button className="cursor-pointer gap-2 py-5" onClick={() => setDialogOpen(true)}>
             <Plus size={15} />
             New booking
           </Button>
@@ -198,22 +213,14 @@ export default function OverviewPage() {
       </div>
 
       {/* Stats */}
-      <div className="mb-6 grid grid-cols-4 gap-4">
+      <div className="mb-6 grid grid-cols-3 gap-4">
         {stats.map((stat) => (
           <div key={stat.label} className="rounded-2xl bg-white p-5 shadow-sm">
             <div className="mb-3 flex items-center justify-between">
               <div className="rounded-lg bg-[#f2ede9] p-2">
-                <stat.icon
-                  size={18}
-                  className={stat.iconColor ?? "text-gray-500"}
-                />
+                <stat.icon size={18} className={stat.iconColor ?? "text-gray-500"} />
               </div>
-              <span
-                className={cn(
-                  "rounded-full px-2 py-0.5 text-xs font-medium",
-                  stat.badgeColor
-                )}
-              >
+              <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", stat.badgeColor)}>
                 {stat.badge}
               </span>
             </div>
@@ -233,45 +240,30 @@ export default function OverviewPage() {
                 {MONTH_NAMES[calMonth]} {calYear}
               </h2>
               <p className="text-sm text-muted-foreground">
-                {BOOKED_DAYS.size} booked days this month
+                {bookedDays.size} booked day{bookedDays.size !== 1 ? "s" : ""} this month
               </p>
             </div>
             <div className="flex gap-1">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={prevMonth}
-              >
+              <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={prevMonth}>
                 <ChevronLeft size={14} />
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={nextMonth}
-              >
+              <Button variant="outline" size="icon" className="h-8 w-8 cursor-pointer" onClick={nextMonth}>
                 <ChevronRight size={14} />
               </Button>
             </div>
           </div>
 
-          {/* Day headers */}
           <div className="mb-1 grid grid-cols-7 text-center">
             {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((d) => (
-              <div
-                key={d}
-                className="py-2 text-xs font-medium text-muted-foreground"
-              >
+              <div key={d} className="py-2 text-xs font-medium text-muted-foreground">
                 {d}
               </div>
             ))}
           </div>
 
-          {/* Day cells */}
           <div className="grid grid-cols-7 gap-1">
             {cells.map((day, i) => {
-              const isBooked = day !== null && BOOKED_DAYS.has(day)
+              const isBooked = day !== null && bookedDays.has(day)
               const isToday =
                 day === today.getDate() &&
                 calMonth === today.getMonth() &&
@@ -283,12 +275,9 @@ export default function OverviewPage() {
                   className={cn(
                     "flex aspect-square items-center justify-center rounded-xl text-sm font-medium transition-colors",
                     day === null && "invisible",
-                    isBooked && "bg-emerald-100 text-emerald-800",
-                    isToday && !isBooked && "bg-primary text-white",
-                    !isBooked &&
-                      !isToday &&
-                      day !== null &&
-                      "cursor-pointer text-gray-700 hover:bg-muted/50"
+                    isBooked && !isToday && "bg-emerald-100 text-emerald-800",
+                    isToday && "bg-primary text-white",
+                    !isBooked && !isToday && day !== null && "cursor-pointer text-gray-700 hover:bg-muted/50"
                   )}
                 >
                   {day}
@@ -304,41 +293,46 @@ export default function OverviewPage() {
             <h2 className="text-base font-bold text-gray-900">
               Today&apos;s appointments
             </h2>
-            <button className="flex items-center gap-1 text-sm text-muted-foreground hover:text-gray-900">
+            <Link
+              href="/dashboard/bookings"
+              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-gray-900"
+            >
               View all <ArrowUpRight size={13} />
-            </button>
+            </Link>
           </div>
 
-          <div className="flex flex-col gap-3">
-            {appointments.map((appt, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 rounded-md border border-gray-100 bg-[#f2ede9] px-3 py-2.5"
-              >
-                <span
-                  className={cn(
-                    "min-w-[46px] rounded-lg px-1.5 py-1 text-center text-xs font-bold text-white",
-                    appt.status === "pending" ? "bg-amber-400" : "bg-primary"
-                  )}
+          {todaysBookings.length === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              No appointments today.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {todaysBookings.map((appt) => (
+                <div
+                  key={appt.id}
+                  className="flex items-center gap-3 rounded-md border border-gray-100 bg-[#f2ede9] px-3 py-2.5"
                 >
-                  {appt.time}
-                </span>
-                <div className="flex-1 overflow-hidden">
-                  <p className="truncate text-sm font-semibold text-gray-900">
-                    {appt.name}
-                  </p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {appt.service} · {appt.staff}
-                  </p>
+                  <span className="min-w-11.5 rounded-lg bg-primary px-1.5 py-1 text-center text-xs font-bold text-white">
+                    {appt.time}
+                  </span>
+                  <div className="flex-1 overflow-hidden">
+                    <p className="truncate text-sm font-semibold text-gray-900">
+                      {appt.client_name}
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {appt.service} · {appt.staff}
+                    </p>
+                  </div>
+                  <span className="text-sm font-semibold whitespace-nowrap text-gray-800">
+                    {appt.price} MAD
+                  </span>
                 </div>
-                <span className="text-sm font-semibold whitespace-nowrap text-gray-800">
-                  {appt.price}
-                </span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
+
       <BookingPopUp open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
   )

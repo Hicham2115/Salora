@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\ServiceController;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/create_salon', [SalonOwnerController::class, 'createSalon']);
 Route::get('/salon_data', [SalonOwnerController::class, 'SalonData']);
 Route::post('/update_salon', [SalonOwnerController::class, 'updateSalon']);
+Route::post('/update_salon_status', [SalonOwnerController::class, 'updateSalonStatus']);
 // Opening Hours Routes
 Route::post('/create_opening_hours', [OpeningHoursController::class, 'createOpeningHours']);
 Route::post('/update_opening_hours', [OpeningHoursController::class, 'updateOpeningHours']);
@@ -38,6 +40,12 @@ Route::post('/update_notifications', [NotificationsController::class, 'updateNot
 // Review Routes
 Route::post('/create_review', [ReviewsController::class, 'createReview']);
 Route::get('/reviews_data', [ReviewsController::class, 'ReviewsData']);
+
+// Booking Routes
+Route::post('/create_booking', [BookingController::class, 'createBooking']);
+Route::get('/bookings_data', [BookingController::class, 'bookingsData']);
+Route::post('/update_booking', [BookingController::class, 'updateBooking']);
+Route::post('/delete_booking', [BookingController::class, 'deleteBooking']);
 
 // Service Routes
 Route::post('/create_service', [ServiceController::class, 'createService']);

@@ -16,7 +16,7 @@ class Client extends Model
     ];
 
     protected $casts = [
-        'last_visit' => 'date',
+        'last_visit' => 'date:Y-m-d',
         'total_spend' => 'decimal:2',
     ];
 }
