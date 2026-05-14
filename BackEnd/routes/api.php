@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OpeningHoursController;
+use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\SalonOwnerController;
 use App\Http\Controllers\StaffController;
 use Illuminate\Http\Request;
@@ -30,3 +33,20 @@ Route::post('/delete_staff', [StaffController::class, 'deleteStaff']);
 Route::post('/create_notifications', [NotificationsController::class, 'createNotifications']);
 Route::get('/notifications_data', [NotificationsController::class, 'NotificationsData']);
 Route::post('/update_notifications', [NotificationsController::class, 'updateNotifications']);
+
+
+// Review Routes
+Route::post('/create_review', [ReviewsController::class, 'createReview']);
+Route::get('/reviews_data', [ReviewsController::class, 'ReviewsData']);
+
+// Service Routes
+Route::post('/create_service', [ServiceController::class, 'createService']);
+Route::get('/services_data', [ServiceController::class, 'servicesData']);
+Route::post('/update_service', [ServiceController::class, 'updateService']);
+Route::post('/delete_service', [ServiceController::class, 'deleteService']);
+
+// Client Routes
+Route::post('/create_client', [ClientController::class, 'createClient']);
+Route::get('/clients_data', [ClientController::class, 'clientsData']);
+Route::post('/update_client', [ClientController::class, 'updateClient']);
+Route::post('/delete_client', [ClientController::class, 'deleteClient']);

@@ -91,13 +91,10 @@ export function NotificationsTab() {
     )
 
   const buildPayload = (): NotifPayload =>
-    notifSchema.reduce(
-      (acc, n) => {
-        acc[n.dbKey] = notifs.find((s) => s.id === n.id)!.enabled
-        return acc
-      },
-      {} as NotifPayload
-    )
+    notifSchema.reduce((acc, n) => {
+      acc[n.dbKey] = notifs.find((s) => s.id === n.id)!.enabled
+      return acc
+    }, {} as NotifPayload)
 
   const mutationConfig = (url: string) => ({
     mutationFn: (payload: NotifPayload) =>
@@ -181,7 +178,7 @@ export function NotificationsTab() {
         <button
           onClick={handleSave}
           disabled={isPending}
-          className="cursor-pointer rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+          className="cursor-pointer rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
         >
           {isPending ? "Saving…" : "Save changes"}
         </button>
