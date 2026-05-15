@@ -144,7 +144,7 @@ function BookingPopUp({ open, onOpenChange }) {
       time,
       duration: selectedService?.duration ?? 30,
       price: selectedService?.price ?? 0,
-      status: "confirmed",
+      status: "pending",
       notes: notes.trim() || null,
     })
   }

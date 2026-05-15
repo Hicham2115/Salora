@@ -138,6 +138,7 @@ export default function PublicBookingPage() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [hours, setHours] = useState<OpeningHours | null>(null)
   const [activeCategory, setActiveCategory] = useState("All")
+  const [mapActive, setMapActive] = useState(false)
 
   // Review form state
   const [reviewName, setReviewName] = useState("")
@@ -726,12 +727,28 @@ export default function PublicBookingPage() {
           {salon?.salon_adresse && (
             <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
               {salon.latitude && salon.longitude ? (
-                <iframe
-                  title="Salon location"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${salon.longitude - 0.005}%2C${salon.latitude - 0.003}%2C${salon.longitude + 0.005}%2C${salon.latitude + 0.003}&layer=mapnik&marker=${salon.latitude}%2C${salon.longitude}`}
-                  className="h-40 w-full border-0"
-                  loading="lazy"
-                />
+                <div
+                  className="relative h-48 w-full"
+                  onMouseLeave={() => setMapActive(false)}
+                >
+                  <iframe
+                    title="Salon location"
+                    src={`https://maps.google.com/maps?q=${salon.latitude},${salon.longitude}&z=16&output=embed`}
+                    className="h-48 w-full border-0"
+                    loading="lazy"
+                    allowFullScreen
+                  />
+                  {!mapActive && (
+                    <div
+                      className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-1 bg-black/10 transition-opacity"
+                      onClick={() => setMapActive(true)}
+                    >
+                      <div className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-gray-700 shadow">
+                        Click to interact with map
+                      </div>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <div className="relative flex h-40 items-center justify-center overflow-hidden bg-[#d9ede2]">
                   <div

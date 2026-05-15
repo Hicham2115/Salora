@@ -128,3 +128,16 @@
     @apply font-sans;
   }
 }
+
+/* Prevent Tailwind preflight from breaking Leaflet tile images and controls */
+.leaflet-container img {
+  max-width: none;
+  max-height: none;
+}
+.leaflet-container * {
+  outline: none;
+  box-sizing: content-box;
+}
+.leaflet-container {
+  box-sizing: border-box;
+}

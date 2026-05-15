@@ -34,7 +34,7 @@ import axios from "axios"
 import { toast } from "sonner"
 import BookingPopUp from "@/components/BookingPopUp"
 
-type Status = "confirmed" | "cancelled"
+type Status = "confirmed" | "cancelled" | "pending"
 
 interface Booking {
   id: number
@@ -54,6 +54,10 @@ const statusConfig: Record<Status, { label: string; className: string }> = {
   confirmed: {
     label: "Confirmed",
     className: "bg-emerald-50 text-emerald-600 border border-emerald-200",
+  },
+  pending: {
+    label: "Pending",
+    className: "bg-yellow-50 text-yellow-600 border border-yellow-200",
   },
   cancelled: {
     label: "Cancelled",
@@ -125,6 +129,7 @@ export default function BookingPage() {
     () => ({
       all: bookings.length,
       confirmed: bookings.filter((b) => b.status === "confirmed").length,
+      pending: bookings.filter((b) => b.status === "pending").length,
       cancelled: bookings.filter((b) => b.status === "cancelled").length,
     }),
     [bookings]
@@ -224,6 +229,7 @@ export default function BookingPage() {
   const tabs: { key: FilterTab; label: string }[] = [
     { key: "all", label: `All (${counts.all})` },
     { key: "confirmed", label: `Confirmed (${counts.confirmed})` },
+    { key: "pending", label: `Pending (${counts.pending})` },
     { key: "cancelled", label: `Cancelled (${counts.cancelled})` },
   ]
 
@@ -376,7 +382,10 @@ export default function BookingPage() {
                                 {/* Detail rows */}
                                 <div className="divide-y divide-gray-100">
                                   {[
-                                    { label: "Service", value: booking.service },
+                                    {
+                                      label: "Service",
+                                      value: booking.service,
+                                    },
                                     { label: "Staff", value: booking.staff },
                                     {
                                       label: "Date",
@@ -419,6 +428,27 @@ export default function BookingPage() {
                               </div>
 
                               <DrawerFooter className="gap-2 px-6 pb-6">
+                                {booking.status == "pending" && (
+                                  <p className="text-center text-xs text-muted-foreground">
+                                    Please make sure to confirm the client’s
+                                    booking before proceeding.
+                                  </p>
+                                )}
+                                {booking.status == "pending" && (
+                                  <Button
+                                    variant="outline"
+                                    className="w-full cursor-pointer border-green-500 bg-green-100 text-green-500 hover:bg-green-100 hover:text-green-600"
+                                    onClick={() =>
+                                      updateMutation.mutate({
+                                        id: booking.id,
+                                        status: "confirmed",
+                                      })
+                                    }
+                                    disabled={updateMutation.isPending}
+                                  >
+                                    Confirm booking
+                                  </Button>
+                                )}
                                 {booking.status !== "cancelled" && (
                                   <Button
                                     variant="outline"
@@ -434,12 +464,26 @@ export default function BookingPage() {
                                     Cancel booking
                                   </Button>
                                 )}
+                                {booking.status == "cancelled" && (
+                                  <Button
+                                    variant="outline"
+                                    className="w-full cursor-pointer border-red-100 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-900"
+                                    onClick={() =>
+                                      updateMutation.mutate({
+                                        id: booking.id,
+                                        status: "pending",
+                                      })
+                                    }
+                                    disabled={updateMutation.isPending}
+                                  >
+                                    Activate booking
+                                  </Button>
+                                )}
+
                                 <Button
                                   variant="outline"
                                   className="w-full cursor-pointer border-red-200 text-red-600 hover:bg-red-50"
-                                  onClick={() =>
-                                    setConfirmDeleteId(booking.id)
-                                  }
+                                  onClick={() => setConfirmDeleteId(booking.id)}
                                 >
                                   Delete booking
                                 </Button>

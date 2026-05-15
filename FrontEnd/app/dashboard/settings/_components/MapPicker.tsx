@@ -1,189 +1,238 @@
 "use client"
-
-import { useEffect, useRef, useState } from "react"
-import { Search, LocateFixed } from "lucide-react"
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  useMap,
+} from "react-leaflet"
 import "leaflet/dist/leaflet.css"
-import type L from "leaflet"
+import L from "leaflet"
+import { useState, useRef, useEffect } from "react"
+import { MapPin, LocateFixed, Search, X } from "lucide-react"
 
-interface Props {
-  lat: number | null
-  lng: number | null
-  onChange: (lat: number, lng: number) => void
-}
-
-const DEFAULT_LAT = 33.5731
-const DEFAULT_LNG = -7.5898
-
-const ICON_OPTIONS = {
+const defaultIcon = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconRetinaUrl:
+    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41] as [number, number],
-  iconAnchor: [12, 41] as [number, number],
-  popupAnchor: [1, -34] as [number, number],
-  shadowSize: [41, 41] as [number, number],
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+})
+
+const MOROCCO_CENTER: [number, number] = [31.7917, -7.0926]
+
+interface NominatimResult {
+  lat: string
+  lon: string
+  display_name: string
 }
 
-export default function MapPicker({ lat, lng, onChange }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const mapRef = useRef<L.Map | null>(null)
-  const markerRef = useRef<L.Marker | null>(null)
-  const LRef = useRef<typeof L | null>(null)
-  const onChangeRef = useRef(onChange)
-  onChangeRef.current = onChange
+interface MapPickerProps {
+  lat?: number | null
+  lng?: number | null
+  onChange?: (lat: number, lng: number) => void
+}
 
+function ClickHandler({
+  onPick,
+}: {
+  onPick: (latlng: [number, number]) => void
+}) {
+  useMapEvents({
+    click(e) {
+      onPick([e.latlng.lat, e.latlng.lng])
+    },
+  })
+  return null
+}
+
+function FlyTo({ target }: { target: [number, number] | null }) {
+  const map = useMap()
+  useEffect(() => {
+    if (target) map.flyTo(target, 14, { duration: 1.2 })
+  }, [target, map])
+  return null
+}
+
+export default function MapPicker({ lat, lng, onChange }: MapPickerProps) {
+  const [coords, setCoords] = useState<[number, number] | null>(
+    lat != null && lng != null ? [lat, lng] : null
+  )
+  const [flyTarget, setFlyTarget] = useState<[number, number] | null>(null)
   const [query, setQuery] = useState("")
+  const [results, setResults] = useState<NominatimResult[]>([])
   const [searching, setSearching] = useState(false)
-  const [noResult, setNoResult] = useState(false)
+  const [geoloading, setGeoloading] = useState(false)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const initializedRef = useRef(false)
 
-  // ── Init map once ──────────────────────────────────────────────────
+  // When server data arrives asynchronously, initialize marker + fly once
   useEffect(() => {
-    if (!containerRef.current || mapRef.current) return
-
-    import("leaflet").then((Leaflet) => {
-      LRef.current = Leaflet
-
-      const initLat = lat ?? DEFAULT_LAT
-      const initLng = lng ?? DEFAULT_LNG
-      const zoom = lat != null ? 15 : 12
-
-      // StrictMode runs cleanup then re-mounts; Leaflet leaves _leaflet_id on
-      // the DOM node even after .remove(), so we clear it before re-initializing.
-      const container = containerRef.current!
-      if ((container as any)._leaflet_id) {
-        delete (container as any)._leaflet_id
-      }
-
-      const map = Leaflet.map(container).setView([initLat, initLng], zoom)
-      mapRef.current = map
-
-      Leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-        maxZoom: 19,
-      }).addTo(map)
-
-      const icon = Leaflet.icon(ICON_OPTIONS)
-
-      function placeMarker(pLat: number, pLng: number) {
-        if (markerRef.current) {
-          markerRef.current.setLatLng([pLat, pLng])
-        } else {
-          markerRef.current = Leaflet.marker([pLat, pLng], { icon, draggable: true }).addTo(map)
-          markerRef.current.on("dragend", () => {
-            const pos = markerRef.current!.getLatLng()
-            onChangeRef.current(pos.lat, pos.lng)
-          })
-        }
-        onChangeRef.current(pLat, pLng)
-      }
-
-      // Store placeMarker on the map instance so search/locate can call it
-      ;(map as any)._placeSalonMarker = placeMarker
-
-      if (lat != null && lng != null) {
-        placeMarker(lat, lng)
-      }
-
-      map.on("click", (e: L.LeafletMouseEvent) => {
-        placeMarker(e.latlng.lat, e.latlng.lng)
-      })
-    })
-
-    return () => {
-      mapRef.current?.remove()
-      mapRef.current = null
-      markerRef.current = null
-      LRef.current = null
+    if (!initializedRef.current && lat != null && lng != null) {
+      const latlng: [number, number] = [lat, lng]
+      setCoords(latlng)
+      setFlyTarget(latlng)
+      initializedRef.current = true
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // ── Sync marker when saved coords load from DB ─────────────────────
-  useEffect(() => {
-    if (!mapRef.current || lat == null || lng == null) return
-    const place = (mapRef.current as any)._placeSalonMarker
-    if (place) place(lat, lng)
-    mapRef.current.setView([lat, lng], mapRef.current.getZoom())
   }, [lat, lng])
 
-  // ── Search ─────────────────────────────────────────────────────────
-  async function handleSearch() {
-    if (!query.trim() || !mapRef.current) return
-    setSearching(true)
-    setNoResult(false)
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
-        { headers: { "Accept-Language": "en", "User-Agent": "Salora/1.0" } }
-      )
-      const data = await res.json()
-      if (!data.length) { setNoResult(true); return }
-      const numLat = parseFloat(data[0].lat)
-      const numLng = parseFloat(data[0].lon)
-      mapRef.current.setView([numLat, numLng], 16)
-      ;(mapRef.current as any)._placeSalonMarker?.(numLat, numLng)
-    } catch {
-      setNoResult(true)
-    } finally {
-      setSearching(false)
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setResults([])
+      }
     }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
+  function pick(latlng: [number, number]) {
+    setCoords(latlng)
+    onChange?.(latlng[0], latlng[1])
   }
 
-  // ── Locate me ─────────────────────────────────────────────────────
-  function locateMe() {
-    if (!navigator.geolocation || !mapRef.current) return
-    navigator.geolocation.getCurrentPosition((pos) => {
-      const { latitude: gLat, longitude: gLng } = pos.coords
-      mapRef.current!.setView([gLat, gLng], 17)
-      ;(mapRef.current as any)._placeSalonMarker?.(gLat, gLng)
-    })
+  function handleSearch(value: string) {
+    setQuery(value)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    if (!value.trim()) {
+      setResults([])
+      return
+    }
+    debounceRef.current = setTimeout(async () => {
+      setSearching(true)
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(value)}&format=json&limit=5&accept-language=en`
+        )
+        setResults(await res.json())
+      } finally {
+        setSearching(false)
+      }
+    }, 400)
+  }
+
+  function handleSelect(result: NominatimResult) {
+    const latlng: [number, number] = [
+      parseFloat(result.lat),
+      parseFloat(result.lon),
+    ]
+    pick(latlng)
+    setFlyTarget(latlng)
+    setQuery(result.display_name)
+    setResults([])
+  }
+
+  function handleGeolocate() {
+    if (!navigator.geolocation) return
+    setGeoloading(true)
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const latlng: [number, number] = [
+          pos.coords.latitude,
+          pos.coords.longitude,
+        ]
+        pick(latlng)
+        setFlyTarget(latlng)
+        setGeoloading(false)
+      },
+      () => setGeoloading(false)
+    )
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      {/* Search — intentionally NOT a <form> to avoid nesting inside the parent form */}
-      <div className="flex gap-2">
+    <div className="flex flex-col gap-3">
+      {/* Search bar + geolocation button */}
+      <div className="flex gap-2" ref={dropdownRef}>
         <div className="relative flex-1">
-          <Search size={14} className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             value={query}
-            onChange={(e) => { setQuery(e.target.value); setNoResult(false) }}
-            onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleSearch())}
-            placeholder="Search address or place…"
-            className="w-full rounded-xl border bg-[#f2ede6] py-2.5 pr-4 pl-9 text-sm outline-none focus:ring-2 focus:ring-primary/30"
+            onChange={(e) => handleSearch(e.target.value)}
+            placeholder="Search for a location…"
+            className="w-full rounded-xl border border-input bg-background py-2 pr-8 pl-9 text-sm outline-none focus:ring-2 focus:ring-ring"
           />
+          {query && (
+            <button
+              onClick={() => {
+                setQuery("")
+                setResults([])
+              }}
+              className="absolute top-1/2 right-2.5 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+
+          {(results.length > 0 || searching) && (
+            <ul className="absolute top-full right-0 left-0 z-1000 mt-1 max-h-52 overflow-y-auto rounded-xl border bg-white shadow-lg">
+              {searching && (
+                <li className="px-3 py-2 text-sm text-muted-foreground">
+                  Searching…
+                </li>
+              )}
+              {results.map((r, i) => (
+                <li
+                  key={i}
+                  onClick={() => handleSelect(r)}
+                  className="flex cursor-pointer items-start gap-2 px-3 py-2 text-sm hover:bg-muted"
+                >
+                  <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#1b4331]" />
+                  <span className="line-clamp-2">{r.display_name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
+
         <button
-          type="button"
-          onClick={handleSearch}
-          disabled={searching}
-          className="cursor-pointer rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+          onClick={handleGeolocate}
+          disabled={geoloading}
+          title="Use my location"
+          className="flex items-center gap-1.5 rounded-xl border border-[#1b4331] px-3 py-2 text-sm font-medium text-[#1b4331] transition hover:bg-[#1b4331] hover:text-white disabled:opacity-50"
         >
-          {searching ? "…" : "Search"}
-        </button>
-        <button
-          type="button"
-          onClick={locateMe}
-          title="Use my current location"
-          className="cursor-pointer rounded-xl border bg-white px-3 py-2 text-gray-600 transition-colors hover:bg-gray-50"
-        >
-          <LocateFixed size={16} />
+          <LocateFixed className="h-4 w-4" />
+          <span className="hidden sm:inline">
+            {geoloading ? "Locating…" : "My location"}
+          </span>
         </button>
       </div>
 
-      {noResult && (
-        <p className="text-xs text-red-500">No results found. Try a more specific address.</p>
-      )}
-
       {/* Map */}
-      <div
-        ref={containerRef}
-        className="h-64 w-full overflow-hidden rounded-2xl border"
+      <MapContainer
+        center={MOROCCO_CENTER}
+        zoom={6}
+        className="h-64 w-full rounded-2xl border"
         style={{ zIndex: 0 }}
-      />
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <ClickHandler
+          onPick={(latlng) => {
+            pick(latlng)
+          }}
+        />
+        <FlyTo target={flyTarget} />
+        {coords && <Marker position={coords} icon={defaultIcon} />}
+      </MapContainer>
 
-      <p className="text-xs text-muted-foreground">
-        Click on the map or drag the marker to set your exact location.
-      </p>
+      {/* {coords ? (
+        <p className="text-muted-foreground text-xs">
+          Pinned — Lat: <span className="font-medium text-[#1b4331]">{coords[0].toFixed(6)}</span>,{" "}
+          Lng: <span className="font-medium text-[#1b4331]">{coords[1].toFixed(6)}</span>
+        </p>
+      ) : (
+        <p className="text-muted-foreground text-xs">
+          Search, use GPS, or click the map to pin your salon location.
+        </p>
+      )} */}
     </div>
   )
 }
