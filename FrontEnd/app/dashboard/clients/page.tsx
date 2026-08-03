@@ -117,13 +117,10 @@ export default function ClientsPage() {
       setFormOpen(false)
       toast.success("Client added", {
         description: `${vars.name} has been added to your database.`,
-        classNames: successToast,
       })
     },
     onError: (error) => {
-      toast.error(errorMsg(error, "Failed to add client"), {
-        classNames: errorToast,
-      })
+      toast.error(errorMsg(error, "Failed to add client"))
     },
   })
 
@@ -143,12 +140,10 @@ export default function ClientsPage() {
       form.reset()
       setEditingId(null)
       setFormOpen(false)
-      toast.success("Client updated", { classNames: successToast })
+      toast.success("Client updated")
     },
     onError: (error) => {
-      toast.error(errorMsg(error, "Failed to update client"), {
-        classNames: errorToast,
-      })
+      toast.error(errorMsg(error, "Failed to update client"))
     },
   })
 
@@ -160,12 +155,10 @@ export default function ClientsPage() {
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: ["clients_data"] })
       setConfirmId(null)
-      toast.success("Client removed", { classNames: successToast })
+      toast.success("Client removed")
     },
     onError: (error) => {
-      toast.error(errorMsg(error, "Failed to delete client"), {
-        classNames: errorToast,
-      })
+      toast.error(errorMsg(error, "Failed to delete client"))
     },
   })
 
@@ -533,14 +526,14 @@ export default function ClientsPage() {
                   setEditingId(null)
                   setFormOpen(false)
                 }}
-                className="cursor-pointer rounded-md"
+                className="cursor-pointer rounded-md py-5"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isPending}
-                className="cursor-pointer gap-2 rounded-md"
+                className="cursor-pointer gap-2 bg-[#1b4331] py-5 text-white"
               >
                 <Plus size={15} />
                 {isPending

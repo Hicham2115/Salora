@@ -53,12 +53,6 @@ export function StaffTab() {
       setShowForm(false)
       toast.success("Staff member added", {
         description: `${vars.staff_name} has been added to the team.`,
-        classNames: {
-          toast: "!bg-green-50 !border !border-green-400",
-          title: "!text-green-700 !font-semibold",
-          description: "!text-green-600",
-          icon: "!text-green-600",
-        },
       })
     },
     onError: (error) => {
@@ -66,19 +60,9 @@ export function StaffTab() {
       const msg =
         (error as any)?.response?.data?.message || "Failed to add staff member"
       if (status >= 400 && status < 500) {
-        toast.warning(msg, {
-          classNames: {
-            toast: "!bg-yellow-50 !border !border-yellow-400",
-            title: "!text-yellow-700 !font-semibold",
-          },
-        })
+        toast.warning(msg)
       } else {
-        toast.error(msg, {
-          classNames: {
-            toast: "!bg-red-50 !border !border-red-400",
-            title: "!text-red-700 !font-semibold",
-          },
-        })
+        toast.error(msg)
       }
     },
   })
@@ -98,25 +82,13 @@ export function StaffTab() {
       form.reset()
       setEditingId(null)
       setShowForm(false)
-      toast.success("Staff member updated", {
-        classNames: {
-          toast: "!bg-green-50 !border !border-green-400",
-          title: "!text-green-700 !font-semibold",
-          description: "!text-green-600",
-          icon: "!text-green-600",
-        },
-      })
+      toast.success("Staff member updated")
     },
     onError: (error) => {
       const msg =
         (error as any)?.response?.data?.message ||
         "Failed to update staff member"
-      toast.error(msg, {
-        classNames: {
-          toast: "!bg-red-50 !border !border-red-400",
-          title: "!text-red-700 !font-semibold",
-        },
-      })
+      toast.error(msg)
     },
   })
 
@@ -126,23 +98,13 @@ export function StaffTab() {
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: ["staff_data"] })
       setConfirmId(null)
-      toast.success("Staff member removed", {
-        classNames: {
-          toast: "!bg-green-50 !border !border-green-400",
-          title: "!text-green-700 !font-semibold",
-        },
-      })
+      toast.success("Staff member removed")
     },
     onError: (error) => {
       const msg =
         (error as any)?.response?.data?.message ||
         "Failed to delete staff member"
-      toast.error(msg, {
-        classNames: {
-          toast: "!bg-red-50 !border !border-red-400",
-          title: "!text-red-700 !font-semibold",
-        },
-      })
+      toast.error(msg)
     },
   })
 

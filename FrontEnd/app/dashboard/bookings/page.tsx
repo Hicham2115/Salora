@@ -86,18 +86,6 @@ function errorMsg(error: unknown, fallback: string) {
   return (error as any)?.response?.data?.message || fallback
 }
 
-const successToast = {
-  toast: "!bg-green-50 !border !border-green-400",
-  title: "!text-green-700 !font-semibold",
-  description: "!text-green-600",
-  icon: "!text-green-600",
-}
-
-const errorToast = {
-  toast: "!bg-red-50 !border !border-red-400",
-  title: "!text-red-700 !font-semibold",
-}
-
 type FilterTab = "all" | Status
 
 const columnHelper = createColumnHelper<Booking>()
@@ -118,7 +106,10 @@ export default function BookingPage() {
     },
   })
 
-  const bookings: Booking[] = data ?? []
+  const bookings: Booking[] = useMemo(
+    () => [...(data ?? [])].sort((a: Booking, b: Booking) => b.id - a.id),
+    [data]
+  )
 
   const filteredData = useMemo(() => {
     if (activeTab === "all") return bookings
@@ -143,12 +134,10 @@ export default function BookingPage() {
       ),
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: ["bookings_data"] })
-      toast.success("Booking updated", { classNames: successToast })
+      toast.success("Booking updated")
     },
     onError: (error) => {
-      toast.error(errorMsg(error, "Failed to update booking"), {
-        classNames: errorToast,
-      })
+      toast.error(errorMsg(error, "Failed to update booking"))
     },
   })
 
@@ -160,12 +149,10 @@ export default function BookingPage() {
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: ["bookings_data"] })
       setConfirmDeleteId(null)
-      toast.success("Booking deleted", { classNames: successToast })
+      toast.success("Booking deleted")
     },
     onError: (error) => {
-      toast.error(errorMsg(error, "Failed to delete booking"), {
-        classNames: errorToast,
-      })
+      toast.error(errorMsg(error, "Failed to delete booking"))
     },
   })
 

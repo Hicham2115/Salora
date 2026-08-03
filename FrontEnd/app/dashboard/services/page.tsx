@@ -30,18 +30,6 @@ const CATEGORIES = ["Haircut", "Beard", "Grooming", "Color", "Treatment"]
 const inputCls =
   "w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary focus:outline-none"
 
-const successToast = {
-  toast: "!bg-green-50 !border !border-green-400",
-  title: "!text-green-700 !font-semibold",
-  description: "!text-green-600",
-  icon: "!text-green-600",
-}
-
-const errorToast = {
-  toast: "!bg-red-50 !border !border-red-400",
-  title: "!text-red-700 !font-semibold",
-}
-
 function errorMsg(error: unknown, fallback: string) {
   return (error as any)?.response?.data?.message || fallback
 }
@@ -108,13 +96,10 @@ export default function ServicesPage() {
       setFormOpen(false)
       toast.success("Service added", {
         description: `${vars.name} has been added.`,
-        classNames: successToast,
       })
     },
     onError: (error) => {
-      toast.error(errorMsg(error, "Failed to add service"), {
-        classNames: errorToast,
-      })
+      toast.error(errorMsg(error, "Failed to add service"))
     },
   })
 
@@ -135,12 +120,10 @@ export default function ServicesPage() {
       form.reset()
       setEditingId(null)
       setFormOpen(false)
-      toast.success("Service updated", { classNames: successToast })
+      toast.success("Service updated")
     },
     onError: (error) => {
-      toast.error(errorMsg(error, "Failed to update service"), {
-        classNames: errorToast,
-      })
+      toast.error(errorMsg(error, "Failed to update service"))
     },
   })
 
@@ -152,12 +135,10 @@ export default function ServicesPage() {
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: ["services_data"] })
       setConfirmId(null)
-      toast.success("Service removed", { classNames: successToast })
+      toast.success("Service removed")
     },
     onError: (error) => {
-      toast.error(errorMsg(error, "Failed to delete service"), {
-        classNames: errorToast,
-      })
+      toast.error(errorMsg(error, "Failed to delete service"))
     },
   })
 
@@ -433,14 +414,14 @@ export default function ServicesPage() {
                   setEditingId(null)
                   setFormOpen(false)
                 }}
-                className="cursor-pointer rounded-md"
+                className="cursor-pointer rounded-md py-5"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isPending}
-                className="cursor-pointer gap-2 rounded-md"
+                className="cursor-pointer gap-2 bg-[#1b4331] py-5 text-white"
               >
                 <Plus size={15} />
                 {isPending

@@ -103,12 +103,6 @@ export function NotificationsTab() {
       queryClient.invalidateQueries({ queryKey: ["notifications_data"] })
       toast.success("Notification settings saved", {
         description: "Your notification preferences have been updated.",
-        classNames: {
-          toast: "!bg-green-50 !border !border-green-400",
-          title: "!text-green-700 !font-semibold",
-          description: "!text-green-600",
-          icon: "!text-green-600",
-        },
       })
     },
     onError: (error: unknown) => {
@@ -119,22 +113,10 @@ export function NotificationsTab() {
       if (status >= 400 && status < 500) {
         toast.warning(errorMessage, {
           description: "Please check your inputs and try again.",
-          classNames: {
-            toast: "!bg-yellow-50 !border !border-yellow-400",
-            title: "!text-yellow-700 !font-semibold",
-            description: "!text-yellow-600",
-            icon: "!text-yellow-600",
-          },
         })
       } else {
         toast.error(errorMessage, {
           description: "Something went wrong. Please try again.",
-          classNames: {
-            toast: "!bg-red-50 !border !border-red-400",
-            title: "!text-red-700 !font-semibold",
-            description: "!text-red-600",
-            icon: "!text-red-600",
-          },
         })
       }
     },

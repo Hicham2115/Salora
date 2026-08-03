@@ -55,12 +55,6 @@ export function OpeningHoursTab() {
   const hoursSuccessToast = () =>
     toast.success("Opening hours saved", {
       description: "Your opening hours have been updated successfully.",
-      classNames: {
-        toast: "!bg-green-50 !border !border-green-400",
-        title: "!text-green-700 !font-semibold",
-        description: "!text-green-600",
-        icon: "!text-green-600",
-      },
     })
 
   const hoursErrorToast = (error: unknown, onRetry: () => void) => {
@@ -70,24 +64,11 @@ export function OpeningHoursTab() {
     if (status >= 400 && status < 500) {
       toast.warning(errorMessage, {
         description: "Please check your inputs and try again.",
-        classNames: {
-          toast: "!bg-yellow-50 !border !border-yellow-400",
-          title: "!text-yellow-700 !font-semibold",
-          description: "!text-yellow-600",
-          icon: "!text-yellow-600",
-        },
       })
     } else {
       toast.error(errorMessage, {
         description: "Something went wrong. Please try again.",
         action: { label: "Retry", onClick: onRetry },
-        classNames: {
-          toast: "!bg-red-50 !border !border-red-400",
-          title: "!text-red-700 !font-semibold",
-          description: "!text-red-600",
-          actionButton: "!bg-red-600 !text-white hover:!bg-red-700",
-          icon: "!text-red-600",
-        },
       })
     }
   }
