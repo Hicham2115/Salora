@@ -14,6 +14,7 @@ import {
   Image as ImageIcon,
   AtSign,
 } from "lucide-react"
+import { Logo } from "@/components/Logo"
 
 /* ─── Types ─────────────────────────────────────────────────────── */
 interface Salon {
@@ -113,7 +114,7 @@ function Stars({ count, size = 14 }: { count: number; size?: number }) {
           className={
             i < count
               ? "fill-amber-400 text-amber-400"
-              : "fill-gray-200 text-gray-200"
+              : "fill-white/15 text-white/15"
           }
         />
       ))}
@@ -223,19 +224,12 @@ export default function PublicBookingPage() {
   const todayHours = hours?.[todayKey]
 
   return (
-    <div className="min-h-screen bg-[#f5f3ef] font-sans text-gray-900">
+    <div className="min-h-screen bg-background font-sans text-white">
       {/* ── Navbar ────────────────────────────────────────────── */}
-      <header className="flex items-center justify-between bg-[#1b4331] px-8 py-4">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded bg-white/15">
-            <span className="text-md font-bold text-white">≡</span>
-          </div>
-          <span className="text-lg font-extrabold tracking-tight text-white">
-            Salora
-          </span>
-        </div>
+      <header className="flex items-center justify-between border-b bg-[#0a0a0a] px-8 py-4">
+        <Logo />
         <div className="flex items-center gap-5 text-sm">
-          <span className="text-white/60">
+          <span className="text-white/50">
             Owner?{" "}
             <a
               href="/sign-up"
@@ -246,7 +240,7 @@ export default function PublicBookingPage() {
           </span>
           <a
             href="/sign-up"
-            className="rounded-lg border border-white/25 bg-white/10 px-4 py-2 font-medium text-white transition hover:bg-white/20"
+            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 font-medium text-white transition hover:bg-white/10"
           >
             Create your page →
           </a>
@@ -254,10 +248,10 @@ export default function PublicBookingPage() {
       </header>
 
       {/* ── Hero ──────────────────────────────────────────────── */}
-      <section className="relative flex overflow-hidden bg-[#1b4331]">
+      <section className="relative flex overflow-hidden border-b bg-card">
         {/* Decorative glow — large circle offset to center-right */}
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 h-150 w-150 -translate-x-1/4 -translate-y-1/2 rounded-full bg-white/6 blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 h-150 w-150 -translate-x-1/4 -translate-y-1/2 rounded-full bg-primary/8 blur-3xl" />
         </div>
 
         {/* Left — text content */}
@@ -296,8 +290,8 @@ export default function PublicBookingPage() {
 
         {/* Right — floating booking widget */}
         <div className="relative flex shrink-0 items-center px-10 py-12">
-          <div className="w-[320px] rounded-2xl bg-white px-6 py-7 shadow-2xl">
-            <p className="mb-0.5 text-base font-bold text-gray-900">
+          <div className="w-[320px] rounded-2xl border border-white/10 bg-[#141414] px-6 py-7 shadow-2xl">
+            <p className="mb-0.5 text-base font-bold text-white">
               Book your visit
             </p>
             <p className="mb-5 text-xs text-muted-foreground">
@@ -309,17 +303,17 @@ export default function PublicBookingPage() {
               {services.slice(0, 3).map((s) => (
                 <div
                   key={s.id}
-                  className="flex items-center justify-between rounded-xl border px-4 py-3"
+                  className="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3"
                 >
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-white">
                       {s.name}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {s.duration}min
                     </p>
                   </div>
-                  <span className="text-lg font-extrabold text-gray-900">
+                  <span className="text-lg font-extrabold text-white">
                     {s.price}{" "}
                     <span className="text-xs font-normal text-muted-foreground">
                       MAD
@@ -339,7 +333,7 @@ export default function PublicBookingPage() {
                   .getElementById("services")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
-              className="mt-5 w-full cursor-pointer rounded-xl bg-[#1b4331] py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              className="mt-5 w-full cursor-pointer rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
               Book an appointment →
             </button>
@@ -348,7 +342,7 @@ export default function PublicBookingPage() {
       </section>
 
       {/* ── Features bar ──────────────────────────────────────── */}
-      <div className="grid grid-cols-4 divide-x border-b bg-white shadow-sm">
+      <div className="grid grid-cols-4 divide-x divide-white/10 border-b bg-card">
         {[
           {
             icon: Shield,
@@ -372,11 +366,11 @@ export default function PublicBookingPage() {
           },
         ].map(({ icon: Icon, label, sub }) => (
           <div key={label} className="flex items-center gap-3 px-8 py-5">
-            <div className="rounded-lg bg-gray-100 p-2.5">
-              <Icon size={16} className="text-gray-500" />
+            <div className="rounded-lg bg-primary/15 p-2.5">
+              <Icon size={16} className="text-primary" />
             </div>
             <div>
-              <p className="text-sm font-semibold">{label}</p>
+              <p className="text-sm font-semibold text-white">{label}</p>
               <p className="text-xs text-muted-foreground">{sub}</p>
             </div>
           </div>
@@ -390,7 +384,7 @@ export default function PublicBookingPage() {
           {/* Our work */}
           <section>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-bold">Our work</h2>
+              <h2 className="text-xl font-bold text-white">Our work</h2>
               <span className="text-sm text-muted-foreground">
                 {PORTFOLIO_TILES.length} photos
               </span>
@@ -400,20 +394,20 @@ export default function PublicBookingPage() {
                 <div
                   key={name}
                   className={cn(
-                    "flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border",
-                    i % 3 === 2 ? "bg-[#e8f0ec]" : "bg-gray-100"
+                    "flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-white/10",
+                    i % 3 === 2 ? "bg-primary/10" : "bg-card"
                   )}
                 >
                   <ImageIcon
                     size={28}
                     className={cn(
-                      i % 3 === 2 ? "text-[#6fa882]" : "text-gray-400"
+                      i % 3 === 2 ? "text-primary" : "text-white/30"
                     )}
                   />
                   <span
                     className={cn(
                       "text-sm font-medium",
-                      i % 3 === 2 ? "text-[#4a8a62]" : "text-gray-500"
+                      i % 3 === 2 ? "text-primary" : "text-muted-foreground"
                     )}
                   >
                     {name}
@@ -425,7 +419,9 @@ export default function PublicBookingPage() {
 
           {/* Services & pricing */}
           <section id="services">
-            <h2 className="mb-4 text-xl font-bold">Services &amp; pricing</h2>
+            <h2 className="mb-4 text-xl font-bold text-white">
+              Services &amp; pricing
+            </h2>
             {/* Category pills */}
             <div className="mb-5 flex flex-wrap gap-2">
               {categories.map((cat) => (
@@ -435,8 +431,8 @@ export default function PublicBookingPage() {
                   className={cn(
                     "cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
                     activeCategory === cat
-                      ? "bg-[#1b4331] text-white"
-                      : "border border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                      ? "bg-primary text-primary-foreground"
+                      : "border border-white/10 bg-card text-white/70 hover:bg-white/5"
                   )}
                 >
                   {cat}
@@ -448,23 +444,23 @@ export default function PublicBookingPage() {
               {filtered.map((s) => (
                 <div
                   key={s.id}
-                  className="flex items-center justify-between rounded-2xl border bg-white px-6 py-5 shadow-sm"
+                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-card px-6 py-5"
                 >
                   <div>
-                    <p className="text-base font-bold">{s.name}</p>
+                    <p className="text-base font-bold text-white">{s.name}</p>
                     <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
                       <Clock size={11} />
                       {s.duration} min
                     </p>
                   </div>
                   <div className="flex items-center gap-5">
-                    <span className="text-2xl font-extrabold">
+                    <span className="text-2xl font-extrabold text-white">
                       {s.price}{" "}
                       <span className="text-sm font-normal text-muted-foreground">
                         MAD
                       </span>
                     </span>
-                    <button className="cursor-pointer rounded-xl bg-[#1b4331] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                    <button className="cursor-pointer rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90">
                       Book now
                     </button>
                   </div>
@@ -481,11 +477,13 @@ export default function PublicBookingPage() {
           {/* Reviews */}
           <section>
             <div className="mb-5 flex items-center gap-3">
-              <h2 className="text-xl font-bold">Reviews</h2>
+              <h2 className="text-xl font-bold text-white">Reviews</h2>
               {reviews.length > 0 && (
                 <span className="flex items-center gap-1.5">
                   <Stars count={Math.round(Number(avgRating))} size={14} />
-                  <span className="text-base font-semibold">{avgRating}</span>
+                  <span className="text-base font-semibold text-white">
+                    {avgRating}
+                  </span>
                   <span className="text-sm text-muted-foreground">
                     ({reviews.length} reviews)
                   </span>
@@ -501,11 +499,11 @@ export default function PublicBookingPage() {
                 {reviews.map((r) => (
                   <div
                     key={r.id}
-                    className="rounded-2xl border bg-white px-6 py-5 shadow-sm"
+                    className="rounded-2xl border border-white/10 bg-card px-6 py-5"
                   >
                     <div className="mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-stone-200 text-xs font-bold text-stone-600">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
                           {r.reviewer_name
                             .split(" ")
                             .map((n) => n[0])
@@ -514,7 +512,7 @@ export default function PublicBookingPage() {
                             .slice(0, 2)}
                         </div>
                         <div>
-                          <p className="text-sm font-semibold">
+                          <p className="text-sm font-semibold text-white">
                             {shortName(r.reviewer_name)}
                           </p>
                           <p className="text-xs text-muted-foreground">
@@ -524,7 +522,7 @@ export default function PublicBookingPage() {
                       </div>
                       <Stars count={r.review_stars} size={14} />
                     </div>
-                    <p className="text-sm text-gray-700">
+                    <p className="text-sm text-white/80">
                       &ldquo;{r.review_content}&rdquo;
                     </p>
                   </div>
@@ -533,17 +531,19 @@ export default function PublicBookingPage() {
             )}
 
             {/* Leave a review form */}
-            <div className="mt-6 rounded-2xl border bg-white px-6 py-6 shadow-sm">
-              <h3 className="mb-4 text-base font-bold">Leave a review</h3>
+            <div className="mt-6 rounded-2xl border border-white/10 bg-card px-6 py-6">
+              <h3 className="mb-4 text-base font-bold text-white">
+                Leave a review
+              </h3>
               {submitted ? (
                 <div className="flex flex-col items-center gap-2 py-4 text-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/15">
                     <Star
                       size={18}
-                      className="fill-emerald-500 text-emerald-500"
+                      className="fill-emerald-400 text-emerald-400"
                     />
                   </div>
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-semibold text-white">
                     Thank you for your review!
                   </p>
                   <p className="text-sm text-muted-foreground">
@@ -551,7 +551,7 @@ export default function PublicBookingPage() {
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="mt-2 cursor-pointer text-sm text-[#1b4331] underline-offset-2 hover:underline"
+                    className="mt-2 cursor-pointer text-sm text-primary underline-offset-2 hover:underline"
                   >
                     Write another review
                   </button>
@@ -569,7 +569,7 @@ export default function PublicBookingPage() {
                       value={reviewName}
                       onChange={(e) => setReviewName(e.target.value)}
                       placeholder="e.g. Mohamed A."
-                      className="w-full rounded-xl border bg-[#f5f3ef] px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1b4331]/30"
+                      className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-primary/30"
                     />
                   </div>
                   <div>
@@ -592,7 +592,7 @@ export default function PublicBookingPage() {
                               "transition-colors",
                               n <= (hoverStar || reviewStars)
                                 ? "fill-amber-400 text-amber-400"
-                                : "fill-gray-200 text-gray-200"
+                                : "fill-white/15 text-white/15"
                             )}
                           />
                         </button>
@@ -608,16 +608,16 @@ export default function PublicBookingPage() {
                       onChange={(e) => setReviewContent(e.target.value)}
                       placeholder="Share your experience..."
                       rows={3}
-                      className="w-full resize-none rounded-xl border bg-[#f5f3ef] px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1b4331]/30"
+                      className="w-full resize-none rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-primary/30"
                     />
                   </div>
                   {reviewError && (
-                    <p className="text-sm text-red-500">{reviewError}</p>
+                    <p className="text-sm text-red-400">{reviewError}</p>
                   )}
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="cursor-pointer rounded-xl bg-[#1b4331] px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                    className="cursor-pointer rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
                   >
                     {submitting ? "Submitting..." : "Submit review"}
                   </button>
@@ -630,9 +630,9 @@ export default function PublicBookingPage() {
         {/* ── Sidebar ───────────────────────────────────────────── */}
         <aside className="w-72 shrink-0 space-y-4">
           {/* CTA */}
-          <div className="rounded-2xl bg-[#1b4331] p-5 text-white">
+          <div className="rounded-2xl border border-primary/30 bg-card p-5 text-white">
             <p className="mb-1 text-base font-bold">Ready to book?</p>
-            <p className="mb-4 text-sm text-white/70">
+            <p className="mb-4 text-sm text-white/60">
               Choose a service and pick a time
             </p>
             <button
@@ -641,7 +641,7 @@ export default function PublicBookingPage() {
                   .getElementById("services")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
-              className="w-full cursor-pointer rounded-xl bg-white py-2.5 text-sm font-semibold text-[#1b4331] transition-opacity hover:opacity-90"
+              className="w-full cursor-pointer rounded-xl bg-primary py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
               Browse services →
             </button>
@@ -649,9 +649,9 @@ export default function PublicBookingPage() {
 
           {/* Salon info */}
           {salon && (
-            <div className="rounded-2xl border bg-white p-5 shadow-sm">
-              <p className="mb-3 text-sm font-bold">Salon info</p>
-              <div className="flex flex-col gap-2.5 text-sm text-gray-600">
+            <div className="rounded-2xl border border-white/10 bg-card p-5">
+              <p className="mb-3 text-sm font-bold text-white">Salon info</p>
+              <div className="flex flex-col gap-2.5 text-sm text-white/70">
                 {salon.salon_adresse && (
                   <div className="flex items-start gap-2">
                     <MapPin
@@ -680,7 +680,7 @@ export default function PublicBookingPage() {
                       href={`https://instagram.com/${salon.salon_instagram.replace(/^@/, "")}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#1b4331] hover:underline"
+                      className="text-primary hover:underline"
                     >
                       {salon.salon_instagram.replace(/^@/, "")}
                     </a>
@@ -692,8 +692,10 @@ export default function PublicBookingPage() {
 
           {/* Opening hours */}
           {hours && (
-            <div className="rounded-2xl border bg-white p-5 shadow-sm">
-              <p className="mb-3 text-sm font-bold">Opening hours</p>
+            <div className="rounded-2xl border border-white/10 bg-card p-5">
+              <p className="mb-3 text-sm font-bold text-white">
+                Opening hours
+              </p>
               <div className="flex flex-col gap-1.5">
                 {DAY_KEYS.map((day) => {
                   const h = hours[day]
@@ -702,21 +704,21 @@ export default function PublicBookingPage() {
                       key={day}
                       className="flex items-center justify-between text-sm"
                     >
-                      <span className="text-gray-600">{DAY_LABELS[day]}</span>
+                      <span className="text-white/60">{DAY_LABELS[day]}</span>
                       {h ? (
-                        <span className="font-medium">
+                        <span className="font-medium text-white">
                           {h.open} – {h.close}
                         </span>
                       ) : (
-                        <span className="font-medium text-red-500">Closed</span>
+                        <span className="font-medium text-red-400">Closed</span>
                       )}
                     </div>
                   )
                 })}
               </div>
               {isOpen && (
-                <div className="mt-3 flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                <div className="mt-3 flex items-center gap-2 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-medium text-emerald-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                   Open now · Closes at {closes}
                 </div>
               )}
@@ -725,7 +727,7 @@ export default function PublicBookingPage() {
 
           {/* Map */}
           {salon?.salon_adresse && (
-            <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-card">
               {salon.latitude && salon.longitude ? (
                 <div
                   className="relative h-48 w-full"
@@ -740,35 +742,39 @@ export default function PublicBookingPage() {
                   />
                   {!mapActive && (
                     <div
-                      className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-1 bg-black/10 transition-opacity"
+                      className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-1 bg-black/40 transition-opacity"
                       onClick={() => setMapActive(true)}
                     >
-                      <div className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-gray-700 shadow">
+                      <div className="rounded-full bg-card/90 px-3 py-1.5 text-xs font-medium text-white shadow">
                         Click to interact with map
                       </div>
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="relative flex h-40 items-center justify-center overflow-hidden bg-[#d9ede2]">
+                <div className="relative flex h-40 items-center justify-center overflow-hidden bg-[#1a1a1a]">
                   <div
                     className="absolute inset-0"
                     style={{
                       backgroundImage:
-                        "linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)",
+                        "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
                       backgroundSize: "24px 24px",
                     }}
                   />
                   <div className="relative flex flex-col items-center">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1b4331] shadow-lg">
-                      <MapPin size={16} className="text-white" fill="white" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary shadow-lg">
+                      <MapPin
+                        size={16}
+                        className="text-primary-foreground"
+                        fill="currentColor"
+                      />
                     </div>
-                    <div className="mt-1 h-1.5 w-1.5 rounded-full bg-[#1b4331]/30" />
+                    <div className="mt-1 h-1.5 w-1.5 rounded-full bg-primary/30" />
                   </div>
                 </div>
               )}
               <div className="px-4 py-3">
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-white">
                   {salon.salon_adresse.split(",")[0]}
                 </p>
                 <p className="text-xs text-muted-foreground">
@@ -781,7 +787,7 @@ export default function PublicBookingPage() {
       </div>
 
       {/* ── Footer ────────────────────────────────────────────── */}
-      <footer className="mt-4 flex items-center justify-between border-t bg-[#1a1a1a] px-10 py-5">
+      <footer className="mt-4 flex items-center justify-between border-t bg-[#0a0a0a] px-10 py-5">
         <p className="text-sm text-white/50">
           © {new Date().getFullYear()} {salon?.salon_name || "Your Salon"} ·
           Powered by <span className="font-semibold text-white">Salora</span>
