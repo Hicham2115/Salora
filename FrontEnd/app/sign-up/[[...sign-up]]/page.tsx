@@ -3,6 +3,8 @@
 import { SignUp } from "@clerk/nextjs"
 import { CalendarDays, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
+import { Reveal } from "@/components/Reveal"
+import { Logo } from "@/components/Logo"
 
 export default function SignUpPage() {
   return (
@@ -16,44 +18,34 @@ export default function SignUpPage() {
 
         <div className="relative z-10 flex flex-col gap-8">
           {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10">
-                <svg
-                  className="h-5 w-5 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-              </div>
-              <span className="text-lg font-semibold tracking-tight">
-                Salora
-              </span>
+          <Reveal className="flex items-center gap-2.5">
+            <Link
+              href="/"
+              className="inline-block transition-opacity duration-200 hover:opacity-80"
+            >
+              <Logo />
             </Link>
-          </div>
+          </Reveal>
 
           {/* Notification card */}
-          <div className="flex items-start gap-3 rounded-xl bg-white/10 px-5 py-4 backdrop-blur-sm">
-            <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10">
-              <CalendarDays className="h-5 w-5 text-white/80" />
+          <Reveal delay={120}>
+            <div className="flex items-start gap-3 rounded-xl bg-white/10 px-5 py-4 backdrop-blur-sm transition-transform duration-200 hover:-translate-y-0.5">
+              <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10">
+                <CalendarDays className="h-5 w-5 text-white/80" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  3 new bookings today
+                </p>
+                <p className="mt-0.5 text-xs text-white/70">
+                  Hamza, Karim &amp; Omar booked online while you were busy.
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-semibold text-white">
-                3 new bookings today
-              </p>
-              <p className="mt-0.5 text-xs text-white/70">
-                Hamza, Karim &amp; Omar booked online while you were busy.
-              </p>
-            </div>
-          </div>
+          </Reveal>
 
           {/* Headline */}
-          <div className="flex flex-col gap-4">
+          <Reveal delay={240} className="flex flex-col gap-4">
             <h1 className="font-jakarta text-5xl leading-[1.1] font-bold tracking-tight text-white">
               Your salon,
               <br />
@@ -63,7 +55,7 @@ export default function SignUpPage() {
               Join 300+ Moroccan salons managing bookings, clients, and payments
               — all from one dashboard.
             </p>
-          </div>
+          </Reveal>
 
           {/* Bullet points */}
           <ul className="flex flex-col gap-3">
@@ -71,20 +63,19 @@ export default function SignUpPage() {
               "14-day free trial, no card needed",
               "Setup in under 5 minutes",
               "Cancel anytime, no questions asked",
-            ].map((item) => (
-              <li
-                key={item}
-                className="flex items-center gap-2.5 text-sm text-white/90"
-              >
-                <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
-                {item}
-              </li>
+            ].map((item, i) => (
+              <Reveal delay={360 + i * 80} key={item}>
+                <li className="flex items-center gap-2.5 text-sm text-white/90">
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
+                  {item}
+                </li>
+              </Reveal>
             ))}
           </ul>
         </div>
 
         {/* Testimonial */}
-        <div className="relative z-10 flex flex-col gap-3">
+        <Reveal delay={200} className="relative z-10 flex flex-col gap-3">
           <p className="text-sm leading-relaxed text-white/80 italic">
             &quot;I set it up on a Tuesday evening. By Wednesday morning I had 2
             online bookings.&quot;
@@ -100,12 +91,14 @@ export default function SignUpPage() {
               </p>
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
 
       {/* ── Right panel ── */}
       <div className="flex w-full flex-col items-center justify-center bg-[#0a0a0a] px-6 lg:w-1/2">
+        <Reveal className="w-full max-w-md" delay={150}>
         <SignUp
+          forceRedirectUrl="/dashboard"
           appearance={{
             variables: {
               colorPrimary: "#d4a954",
@@ -129,11 +122,12 @@ export default function SignUpPage() {
               dividerText: "text-white/60! text-xs",
               formFieldLabel: "text-sm font-medium text-white!",
               formFieldInput:
-                "bg-[#1a1a1a]! border-white/10 text-white! rounded-xl h-11 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary",
+                "bg-[#1a1a1a]! border-white/10 text-white! placeholder:text-white/40! rounded-xl h-11 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary",
               formButtonPrimary:
                 "bg-primary! text-primary-foreground! hover:bg-primary/90! rounded-xl h-11 font-semibold text-sm shadow-none",
               footerActionText: "text-white/70! text-sm",
               footerActionLink: "text-primary! font-semibold hover:underline",
+              footerItem: "text-white/60!",
               identityPreviewText: "text-sm text-white/90!",
               identityPreviewEditButton: "text-primary!",
               formFieldInputShowPasswordButton:
@@ -142,6 +136,7 @@ export default function SignUpPage() {
             },
           }}
         />
+        </Reveal>
       </div>
     </div>
   )

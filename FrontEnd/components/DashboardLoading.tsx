@@ -1,6 +1,6 @@
 export function DashboardLoading() {
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-[#f2ede6]">
+    <div className="flex h-screen w-full items-center justify-center bg-black">
       <div className="flex flex-col items-center gap-6">
         {/* Logo mark */}
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary shadow-lg">
@@ -9,7 +9,7 @@ export function DashboardLoading() {
 
         {/* Brand name */}
         <div className="flex flex-col items-center gap-1">
-          <span className="text-xl font-bold text-gray-900">Salora</span>
+          <span className="text-xl font-bold text-white">Salora</span>
           <span className="text-sm text-gray-400">Loading your dashboard…</span>
         </div>
 

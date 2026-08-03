@@ -166,3 +166,13 @@
 .leaflet-container {
   box-sizing: border-box;
 }
+
+/* Clerk's "Secured by Clerk" footer badge hardcodes a dark color meant for
+   light backgrounds; override it for our dark theme without touching the
+   dev-mode notice, which shares the same data-color attribute. */
+.cl-footerItem p[data-color="inherit"]:not([data-clerk-dev-mode-notice]) {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+.cl-footerItem a[aria-label="Clerk logo"] {
+  color: rgba(255, 255, 255, 0.6) !important;
+}

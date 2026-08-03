@@ -56,18 +56,6 @@ function formatDate(dateStr: string | null) {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" })
 }
 
-const successToast = {
-  toast: "!bg-green-50 !border !border-green-400",
-  title: "!text-green-700 !font-semibold",
-  description: "!text-green-600",
-  icon: "!text-green-600",
-}
-
-const errorToast = {
-  toast: "!bg-red-50 !border !border-red-400",
-  title: "!text-red-700 !font-semibold",
-}
-
 function errorMsg(error: unknown, fallback: string) {
   return (error as any)?.response?.data?.message || fallback
 }

@@ -25,22 +25,25 @@ import axios from "axios"
 import { toast } from "sonner"
 
 const TIME_SLOTS = [
-  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-  "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-  "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+  "09:00",
+  "09:30",
+  "10:00",
+  "10:30",
+  "11:00",
+  "11:30",
+  "12:00",
+  "12:30",
+  "13:00",
+  "13:30",
+  "14:00",
+  "14:30",
+  "15:00",
+  "15:30",
+  "16:00",
+  "16:30",
+  "17:00",
+  "17:30",
 ]
-
-const successToast = {
-  toast: "!bg-green-50 !border !border-green-400",
-  title: "!text-green-700 !font-semibold",
-  description: "!text-green-600",
-  icon: "!text-green-600",
-}
-
-const errorToast = {
-  toast: "!bg-red-50 !border !border-red-400",
-  title: "!text-red-700 !font-semibold",
-}
 
 function BookingPopUp({ open, onOpenChange }) {
   const queryClient = useQueryClient()
@@ -91,16 +94,12 @@ function BookingPopUp({ open, onOpenChange }) {
       await queryClient.refetchQueries({ queryKey: ["bookings_data"] })
       toast.success("Booking created", {
         description: `Appointment for ${vars.client_name} has been added.`,
-        classNames: successToast,
       })
       resetForm()
       onOpenChange(false)
     },
     onError: (error) => {
-      toast.error(
-        error?.response?.data?.message || "Failed to create booking",
-        { classNames: errorToast }
-      )
+      toast.error(error?.response?.data?.message || "Failed to create booking")
     },
   })
 
@@ -117,19 +116,19 @@ function BookingPopUp({ open, onOpenChange }) {
 
   function handleSubmit() {
     if (!clientName.trim()) {
-      toast.error("Client name is required", { classNames: errorToast })
+      toast.error("Client name is required")
       return
     }
     if (!serviceId) {
-      toast.error("Please select a service", { classNames: errorToast })
+      toast.error("Please select a service")
       return
     }
     if (!staffId) {
-      toast.error("Please select a staff member", { classNames: errorToast })
+      toast.error("Please select a staff member")
       return
     }
     if (!date) {
-      toast.error("Please select a date", { classNames: errorToast })
+      toast.error("Please select a date")
       return
     }
 
@@ -306,7 +305,7 @@ function BookingPopUp({ open, onOpenChange }) {
           </div>
 
           {/* Summary */}
-          {selectedService && (
+          {/* {selectedService && (
             <div className="flex items-center justify-between rounded-lg bg-[#f2ede6] px-4 py-3">
               <div>
                 <p className="text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
@@ -318,7 +317,7 @@ function BookingPopUp({ open, onOpenChange }) {
               </div>
               <p className="text-2xl font-bold">{selectedService.price} MAD</p>
             </div>
-          )}
+          )} */}
 
           {/* SMS checkbox */}
           <label className="flex cursor-pointer items-center gap-2 select-none">
@@ -352,12 +351,12 @@ function BookingPopUp({ open, onOpenChange }) {
             Cancel
           </Button>
           <Button
-            className="gap-2 bg-[#1b4331] py-5 hover:bg-[#163828]"
+            className="cursor-pointer gap-2 bg-[#1b4331] py-5 text-white"
             onClick={handleSubmit}
             disabled={createMutation.isPending}
           >
-            <Check size={14} />
             {createMutation.isPending ? "Creating..." : "Create booking"}
+            <Check size={14} />
           </Button>
         </div>
       </DialogContent>
