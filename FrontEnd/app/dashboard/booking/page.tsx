@@ -125,7 +125,10 @@ export default function BookingPageDashboard() {
         </p>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex flex-1 items-center gap-2 rounded-xl border border-white/10 bg-muted px-4 py-2.5">
-            <ExternalLink size={14} className="shrink-0 text-muted-foreground" />
+            <ExternalLink
+              size={14}
+              className="shrink-0 text-muted-foreground"
+            />
             <span className="truncate text-sm font-medium text-white">
               {displayUrl}
             </span>
@@ -144,7 +147,11 @@ export default function BookingPageDashboard() {
             {copied ? "Copied!" : "Copy link"}
           </button>
           <a
-            href={publicUrl ? `https://wa.me/?text=Book+your+appointment+at+${encodeURIComponent(publicUrl)}` : "#"}
+            href={
+              publicUrl
+                ? `https://wa.me/?text=Book+your+appointment+at+${encodeURIComponent(publicUrl)}`
+                : "#"
+            }
             target="_blank"
             rel="noopener noreferrer"
             className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/5"
@@ -167,7 +174,10 @@ export default function BookingPageDashboard() {
       {/* Stats */}
       <div className="mb-6 grid grid-cols-3 gap-4">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-2xl border border-white/10 bg-card p-5">
+          <div
+            key={s.label}
+            className="rounded-2xl border border-white/10 bg-card p-5"
+          >
             <div className={cn("mb-3 w-fit rounded-lg p-2", s.iconBg)}>
               <s.icon size={18} className={s.iconColor} />
             </div>
@@ -187,7 +197,10 @@ export default function BookingPageDashboard() {
             <div className="h-3 w-3 rounded-full bg-green-400" />
           </div>
           <div className="flex flex-1 items-center gap-2 rounded-md border border-white/10 bg-[#1a1a1a] px-3 py-1.5">
-            <ExternalLink size={11} className="shrink-0 text-muted-foreground" />
+            <ExternalLink
+              size={11}
+              className="shrink-0 text-muted-foreground"
+            />
             <span className="truncate text-xs text-muted-foreground">
               {displayUrl}
             </span>
@@ -210,7 +223,7 @@ export default function BookingPageDashboard() {
             <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/4 -translate-y-1/2 rounded-full bg-primary/8 blur-3xl" />
           </div>
 
-          <div className="relative flex flex-wrap items-center justify-center gap-10">
+          <div className="relative flex flex-wrap items-center justify-between gap-10">
             <div className="flex max-w-sm flex-col">
               <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-medium">
                 <span
@@ -236,7 +249,9 @@ export default function BookingPageDashboard() {
             </div>
 
             <div className="w-65 shrink-0 rounded-2xl border border-white/10 bg-[#141414] px-5 py-6 shadow-2xl">
-              <p className="mb-3 text-sm font-bold text-white">Book your visit</p>
+              <p className="mb-3 text-sm font-bold text-white">
+                Book your visit
+              </p>
               <div className="flex flex-col gap-2">
                 {services.slice(0, 3).map((s) => (
                   <div
