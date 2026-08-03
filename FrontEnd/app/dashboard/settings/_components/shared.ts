@@ -43,4 +43,4 @@ export function initials(name: string) {
 }
 
 export const inputCls =
-  "w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-primary focus:outline-none"
+  "w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary focus:outline-none"

@@ -23,7 +23,7 @@ function StarRating({ rating, max = 5 }: { rating: number; max?: number }) {
             "h-4 w-4",
             i < rating
               ? "fill-amber-400 text-amber-400"
-              : "fill-muted text-black/30"
+              : "fill-muted text-muted-foreground/40"
           )}
         />
       ))}
@@ -78,30 +78,30 @@ export default function ReviewsPage() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-black">Reviews</h1>
-        <p className="text-sm text-black">
+        <h1 className="text-2xl font-bold tracking-tight text-white">Reviews</h1>
+        <p className="text-sm text-muted-foreground">
           {total} {total === 1 ? "review" : "reviews"} · {average.toFixed(1)} average rating
         </p>
       </div>
 
       <div className="flex flex-col gap-4 md:flex-row md:items-start">
         {/* Summary card */}
-        <div className="w-full shrink-0 rounded-xl border bg-card p-6 md:w-72">
+        <div className="w-full shrink-0 rounded-xl border border-white/10 bg-card p-6 md:w-72">
           <div className="flex flex-col items-center gap-2 pb-4">
             <span className="text-6xl font-bold text-primary">
               {average.toFixed(1)}
             </span>
             <StarRating rating={Math.round(average)} />
-            <p className="text-sm text-black">out of 5 · {total} reviews</p>
+            <p className="text-sm text-muted-foreground">out of 5 · {total} reviews</p>
           </div>
 
           <div className="space-y-2 pt-2">
             {distribution.map(({ star, count }) => (
               <div key={star} className="flex items-center gap-2 text-sm">
-                <span className="w-2 text-right text-black">{star}</span>
+                <span className="w-2 text-right text-white">{star}</span>
                 <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                 <RatingBar count={count} total={total} />
-                <span className="w-3 text-right text-black">{count}</span>
+                <span className="w-3 text-right text-white">{count}</span>
               </div>
             ))}
           </div>
@@ -116,20 +116,20 @@ export default function ReviewsPage() {
             <p className="py-8 text-center text-sm text-muted-foreground">No reviews yet.</p>
           )}
           {reviews.map((review) => (
-            <div key={review.id} className="rounded-xl border bg-card p-5">
+            <div key={review.id} className="rounded-xl border border-white/10 bg-card p-5">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-black">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-white">
                     {initials(review.reviewer_name)}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-black">{review.reviewer_name}</p>
-                    <p className="text-xs text-black">{formatDate(review.created_at)}</p>
+                    <p className="text-sm font-semibold text-white">{review.reviewer_name}</p>
+                    <p className="text-xs text-muted-foreground">{formatDate(review.created_at)}</p>
                   </div>
                 </div>
                 <StarRating rating={review.review_stars} />
               </div>
-              <p className="mt-3 text-sm text-black italic">
+              <p className="mt-3 text-sm text-white/80 italic">
                 &ldquo;{review.review_content}&rdquo;
               </p>
             </div>

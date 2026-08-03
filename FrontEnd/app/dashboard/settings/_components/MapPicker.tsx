@@ -170,7 +170,7 @@ export default function MapPicker({ lat, lng, onChange }: MapPickerProps) {
           )}
 
           {(results.length > 0 || searching) && (
-            <ul className="absolute top-full right-0 left-0 z-1000 mt-1 max-h-52 overflow-y-auto rounded-xl border bg-white shadow-lg">
+            <ul className="absolute top-full right-0 left-0 z-1000 mt-1 max-h-52 overflow-y-auto rounded-xl border border-white/10 bg-card shadow-lg">
               {searching && (
                 <li className="px-3 py-2 text-sm text-muted-foreground">
                   Searching…
@@ -180,9 +180,9 @@ export default function MapPicker({ lat, lng, onChange }: MapPickerProps) {
                 <li
                   key={i}
                   onClick={() => handleSelect(r)}
-                  className="flex cursor-pointer items-start gap-2 px-3 py-2 text-sm hover:bg-muted"
+                  className="flex cursor-pointer items-start gap-2 px-3 py-2 text-sm text-white hover:bg-white/5"
                 >
-                  <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#1b4331]" />
+                  <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                   <span className="line-clamp-2">{r.display_name}</span>
                 </li>
               ))}
@@ -194,7 +194,7 @@ export default function MapPicker({ lat, lng, onChange }: MapPickerProps) {
           onClick={handleGeolocate}
           disabled={geoloading}
           title="Use my location"
-          className="flex items-center gap-1.5 rounded-xl border border-[#1b4331] px-3 py-2 text-sm font-medium text-[#1b4331] transition hover:bg-[#1b4331] hover:text-white disabled:opacity-50"
+          className="flex items-center gap-1.5 rounded-xl border border-primary px-3 py-2 text-sm font-medium text-primary transition hover:bg-primary hover:text-primary-foreground disabled:opacity-50"
         >
           <LocateFixed className="h-4 w-4" />
           <span className="hidden sm:inline">
@@ -207,7 +207,7 @@ export default function MapPicker({ lat, lng, onChange }: MapPickerProps) {
       <MapContainer
         center={MOROCCO_CENTER}
         zoom={6}
-        className="h-64 w-full rounded-2xl border"
+        className="h-64 w-full rounded-2xl border border-white/10"
         style={{ zIndex: 0 }}
       >
         <TileLayer
@@ -225,8 +225,8 @@ export default function MapPicker({ lat, lng, onChange }: MapPickerProps) {
 
       {/* {coords ? (
         <p className="text-muted-foreground text-xs">
-          Pinned — Lat: <span className="font-medium text-[#1b4331]">{coords[0].toFixed(6)}</span>,{" "}
-          Lng: <span className="font-medium text-[#1b4331]">{coords[1].toFixed(6)}</span>
+          Pinned — Lat: <span className="font-medium text-primary">{coords[0].toFixed(6)}</span>,{" "}
+          Lng: <span className="font-medium text-primary">{coords[1].toFixed(6)}</span>
         </p>
       ) : (
         <p className="text-muted-foreground text-xs">

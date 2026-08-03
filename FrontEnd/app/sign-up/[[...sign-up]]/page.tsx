@@ -8,7 +8,7 @@ export default function SignUpPage() {
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/* ── Left panel ── */}
-      <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-[#1b4331] p-12 text-white lg:flex">
+      <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden border-r border-white/10 bg-[#0a0a0a] p-12 text-white lg:flex">
         {/* Decorative background circles */}
         <div className="pointer-events-none absolute -right-32 -bottom-32 h-[480px] w-[480px] rounded-full border border-white/10" />
         <div className="pointer-events-none absolute -right-16 -bottom-16 h-[340px] w-[340px] rounded-full border border-white/10" />
@@ -76,7 +76,7 @@ export default function SignUpPage() {
                 key={item}
                 className="flex items-center gap-2.5 text-sm text-white/90"
               >
-                <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-400" />
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
                 {item}
               </li>
             ))}
@@ -104,15 +104,15 @@ export default function SignUpPage() {
       </div>
 
       {/* ── Right panel ── */}
-      <div className="flex w-full flex-col items-center justify-center bg-[#faf6f2] px-6 lg:w-1/2">
+      <div className="flex w-full flex-col items-center justify-center bg-[#0a0a0a] px-6 lg:w-1/2">
         <SignUp
           appearance={{
             variables: {
-              colorPrimary: "#1b4331",
-              colorBackground: "#faf6f2",
-              colorInputBackground: "#ffffff",
-              colorText: "#111827",
-              colorTextSecondary: "#6b7280",
+              colorPrimary: "#d4a954",
+              colorBackground: "#0a0a0a",
+              colorInputBackground: "#1a1a1a",
+              colorText: "#ffffff",
+              colorTextSecondary: "#c9c9c9",
               borderRadius: "0.625rem",
               fontFamily: "inherit",
             },
@@ -120,24 +120,25 @@ export default function SignUpPage() {
               rootBox: "w-full max-w-md",
               card: "shadow-none bg-transparent p-0 gap-6",
               cardBox: "shadow-none",
-              headerTitle: "text-3xl font-bold text-gray-900 font-jakarta",
-              headerSubtitle: "text-sm text-gray-500 mt-1",
+              headerTitle: "text-3xl! font-bold text-white! font-jakarta",
+              headerSubtitle: "text-sm text-white/70! mt-1",
               socialButtonsBlockButton:
-                "bg-white border border-gray-200 text-gray-800 hover:bg-gray-50 rounded-xl h-11 font-medium shadow-none",
-              socialButtonsBlockButtonText: "font-medium text-sm",
-              dividerLine: "bg-gray-200",
-              dividerText: "text-gray-400 text-xs",
-              formFieldLabel: "text-sm font-medium text-gray-700",
+                "bg-[#1a1a1a]! border border-white/10 text-white! hover:bg-[#1f1f1f]! rounded-xl h-11 font-medium shadow-none",
+              socialButtonsBlockButtonText: "font-medium text-sm text-white!",
+              dividerLine: "bg-white/10!",
+              dividerText: "text-white/60! text-xs",
+              formFieldLabel: "text-sm font-medium text-white!",
               formFieldInput:
-                "bg-white border-gray-200 rounded-xl h-11 text-sm focus:ring-2 focus:ring-[#1b4331]/20 focus:border-[#1b4331]",
+                "bg-[#1a1a1a]! border-white/10 text-white! rounded-xl h-11 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary",
               formButtonPrimary:
-                "bg-[#1b4331] hover:bg-[#1b4331]/90 rounded-xl h-11 font-semibold text-sm shadow-none",
-              footerActionLink: "text-[#1b4331] font-semibold hover:underline",
-              identityPreviewText: "text-sm text-gray-700",
-              identityPreviewEditButton: "text-[#1b4331]",
+                "bg-primary! text-primary-foreground! hover:bg-primary/90! rounded-xl h-11 font-semibold text-sm shadow-none",
+              footerActionText: "text-white/70! text-sm",
+              footerActionLink: "text-primary! font-semibold hover:underline",
+              identityPreviewText: "text-sm text-white/90!",
+              identityPreviewEditButton: "text-primary!",
               formFieldInputShowPasswordButton:
-                "text-gray-400 hover:text-gray-600",
-              otpCodeFieldInput: "border-gray-200 rounded-lg",
+                "text-white/60! hover:text-white!",
+              otpCodeFieldInput: "border-white/10 bg-[#1a1a1a]! text-white! rounded-lg",
             },
           }}
         />

@@ -118,17 +118,17 @@ export function OpeningHoursTab() {
 
   return (
     <div>
-      <h2 className="mb-6 text-lg font-bold text-gray-900">Opening Hours</h2>
+      <h2 className="mb-6 text-lg font-bold text-white">Opening Hours</h2>
       <div className="flex flex-col gap-3">
         {DAYS.map((day) => {
           const s = hours[day]
           return (
             <div
               key={day}
-              className="flex items-center gap-4 rounded-xl border bg-white px-5 py-3.5"
+              className="flex items-center gap-4 rounded-xl border border-white/10 bg-card px-5 py-3.5"
             >
               <div className="w-28">
-                <span className="text-sm font-semibold text-gray-900">{day}</span>
+                <span className="text-sm font-semibold text-white">{day}</span>
               </div>
               <label className="relative inline-flex cursor-pointer items-center">
                 <input
@@ -137,7 +137,7 @@ export function OpeningHoursTab() {
                   onChange={() => toggle(day)}
                   className="peer sr-only"
                 />
-                <div className="peer h-5 w-9 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-4" />
+                <div className="peer h-5 w-9 rounded-full bg-white/15 transition-colors peer-checked:bg-primary after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-4" />
               </label>
               {s.open ? (
                 <div className="flex items-center gap-2 text-sm">
@@ -145,14 +145,14 @@ export function OpeningHoursTab() {
                     type="time"
                     value={s.from}
                     onChange={(e) => setTime(day, "from", e.target.value)}
-                    className="rounded-lg border px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="rounded-lg border border-white/10 bg-[#1a1a1a] px-3 py-1.5 text-sm text-white focus:ring-2 focus:ring-primary focus:outline-none"
                   />
-                  <span className="text-gray-400">—</span>
+                  <span className="text-muted-foreground">—</span>
                   <input
                     type="time"
                     value={s.to}
                     onChange={(e) => setTime(day, "to", e.target.value)}
-                    className="rounded-lg border px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="rounded-lg border border-white/10 bg-[#1a1a1a] px-3 py-1.5 text-sm text-white focus:ring-2 focus:ring-primary focus:outline-none"
                   />
                 </div>
               ) : (
@@ -171,13 +171,13 @@ export function OpeningHoursTab() {
               addOpeningHours.mutate({ owner_id: 1, ...apiPayload })
             }
           }}
-          className="cursor-pointer rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          className="cursor-pointer rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           {addOpeningHours.isPending || updateOpeningHours.isPending ? "Saving..." : "Save changes"}
         </button>
         <button
           onClick={() => setHours(defaultHours)}
-          className="cursor-pointer rounded-md border px-6 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+          className="cursor-pointer rounded-md border border-white/20 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/5"
         >
           Reset
         </button>

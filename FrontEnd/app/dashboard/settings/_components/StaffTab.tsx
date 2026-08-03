@@ -188,18 +188,18 @@ export function StaffTab() {
   return (
     <div>
       <div className="mb-6 flex items-start justify-between">
-        <h2 className="text-lg font-bold text-gray-900">Staff</h2>
+        <h2 className="text-lg font-bold text-white">Staff</h2>
         <button
           onClick={openAdd}
-          className="flex cursor-pointer items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          className="flex cursor-pointer items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           <Plus size={15} /> Add member
         </button>
       </div>
 
       {showForm && (
-        <div className="mb-5 rounded-2xl border-2 border-primary bg-white p-5">
-          <h3 className="mb-4 text-sm font-semibold text-gray-900">
+        <div className="mb-5 rounded-2xl border-2 border-primary bg-card p-5">
+          <h3 className="mb-4 text-sm font-semibold text-white">
             {editingId !== null ? "Edit staff member" : "New staff member"}
           </h3>
           <form
@@ -258,14 +258,14 @@ export function StaffTab() {
             <div className="mt-4 flex gap-3">
               <button
                 type="submit"
-                className="cursor-pointer rounded-md bg-primary px-5 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                className="cursor-pointer rounded-md bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
               >
                 {isPending ? "Saving..." : editingId !== null ? "Save" : "Add"}
               </button>
               <button
                 type="button"
                 onClick={closeForm}
-                className="cursor-pointer rounded-md border px-5 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                className="cursor-pointer rounded-md border border-white/20 px-5 py-2 text-sm font-semibold text-white hover:bg-white/5"
               >
                 Cancel
               </button>
@@ -280,26 +280,26 @@ export function StaffTab() {
             {staffList.map((member) => (
               <div
                 key={member.id}
-                className="flex items-center gap-4 rounded-xl border bg-white px-5 py-4"
+                className="flex items-center gap-4 rounded-xl border border-white/10 bg-card px-5 py-4"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary">
                   {member.initials}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-white">
                     {member.name}
                   </p>
                   <p className="text-xs text-muted-foreground">{member.role}</p>
                 </div>
                 <button
                   onClick={() => openEdit(member)}
-                  className="cursor-pointer text-gray-400 transition-colors hover:text-primary"
+                  className="cursor-pointer text-muted-foreground transition-colors hover:text-primary"
                 >
                   <Pencil size={15} />
                 </button>
                 <button
                   onClick={() => setConfirmId(member.id)}
-                  className="cursor-pointer text-gray-400 transition-colors hover:text-red-500"
+                  className="cursor-pointer text-muted-foreground transition-colors hover:text-red-500"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -307,7 +307,7 @@ export function StaffTab() {
             ))}
           </>
         ) : (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             No staff members found. Add your team to manage their schedules and
             appointments.
           </p>
@@ -328,7 +328,7 @@ export function StaffTab() {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <button className="cursor-pointer rounded-md border px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+              <button className="cursor-pointer rounded-md border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:bg-white/5">
                 Cancel
               </button>
             </DialogClose>

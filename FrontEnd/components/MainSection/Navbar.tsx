@@ -1,8 +1,9 @@
 "use client"
 
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
-import { HouseIcon, InboxIcon, Menu, SearchIcon, ZapIcon } from "lucide-react"
+import { HouseIcon, InboxIcon, SearchIcon, ZapIcon } from "lucide-react"
 import { useId } from "react"
+import { Logo } from "@/components/Logo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -23,13 +24,14 @@ const navigationLinks = [
   { href: "#how-it-works", label: "How it works" },
   { href: "#pricing", label: "Pricing" },
   { href: "#faq", label: "FAQ" },
+  { href: "#contact", label: "Contact" },
 ]
 
 export default function Component() {
   const { user } = useUser()
 
   return (
-    <header className="sticky top-0 z-9999 border border-[#d1d2d0] bg-[#faf5f2] px-4 md:px-6">
+    <header className="sticky top-0 z-9999 border-b border-white/10 bg-[#0a0a0a] px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex flex-1 items-center gap-2">
@@ -89,12 +91,7 @@ export default function Component() {
           </Popover>
           {/* Logo */}
           <Link href="/">
-            <div className="flex items-center gap-1">
-              <div className="rounded-md bg-primary p-1.5">
-                <Menu className="text-white" size={19} />
-              </div>
-              <span className="ml-2 text-lg font-bold text-black">SALORA</span>
-            </div>
+            <Logo />
           </Link>
         </div>
         {/* Middle area */}
@@ -104,10 +101,11 @@ export default function Component() {
               return (
                 <NavigationMenuItem key={link.label}>
                   <NavigationMenuLink
-                    className="flex-row items-center gap-2 py-1.5 font-jakarta font-medium text-foreground hover:bg-transparent hover:text-primary"
+                    className="group/navlink relative flex-row items-center gap-2 py-1.5 font-jakarta font-medium text-foreground transition-colors duration-200 hover:bg-transparent hover:text-primary"
                     href={link.href}
                   >
                     <span>{link.label}</span>
+                    <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-primary transition-all duration-200 group-hover/navlink:w-full" />
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               )
@@ -118,7 +116,7 @@ export default function Component() {
           {user ? (
             <>
               <Link href="/dashboard">
-                <Button className="relative cursor-pointer p-5 font-semibold transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-emerald-800 hover:shadow-lg active:translate-y-0 active:scale-95">
+                <Button className="relative cursor-pointer p-5 font-semibold transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#c99a3f] hover:shadow-lg active:translate-y-0 active:scale-95">
                   Dashboard
                 </Button>
               </Link>
@@ -129,14 +127,14 @@ export default function Component() {
               <SignInButton mode="modal" forceRedirectUrl="/dashboard">
                 <Button
                   variant="outline"
-                  className="cursor-pointer border border-[#d1d2d0] p-5 font-semibold text-black transition-all duration-300 ease-out hover:border-primary hover:bg-transparent hover:text-black"
+                  className="cursor-pointer border border-white/20 bg-transparent p-5 font-semibold text-white transition-all duration-300 ease-out hover:border-primary hover:bg-transparent hover:text-white"
                 >
                   Log in
                 </Button>
               </SignInButton>
 
               <Link href="/sign-up">
-                <Button className="relative cursor-pointer p-5 font-semibold transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-emerald-800 hover:shadow-lg active:translate-y-0 active:scale-95">
+                <Button className="relative cursor-pointer p-5 font-semibold transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#c99a3f] hover:shadow-lg active:translate-y-0 active:scale-95">
                   Get started free →
                 </Button>
               </Link>

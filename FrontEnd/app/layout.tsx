@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import type { Metadata } from "next"
 import { Toaster } from "@/components/ui/sonner"
+import { Providers } from "./providers"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -44,8 +45,10 @@ export default function RootLayout({
     >
       <body className="bg-background">
         <ClerkProvider>
-          <TooltipProvider>{children}</TooltipProvider>
-          <Toaster /> 
+          <Providers>
+            <TooltipProvider>{children}</TooltipProvider>
+            <Toaster />
+          </Providers>
         </ClerkProvider>
       </body>
     </html>

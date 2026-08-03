@@ -70,11 +70,11 @@ export default function PortfolioPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen bg-background p-8">
       {/* Header */}
       <div className="mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Portfolio</h1>
+          <h1 className="text-2xl font-bold text-white">Portfolio</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
             Show off your best work to attract new clients
           </p>
@@ -108,7 +108,7 @@ export default function PortfolioPage() {
             <div
               className={cn(
                 "absolute inset-0 transition-colors duration-200",
-                item.imageUrl ? "" : "bg-[#cdd9d3]"
+                item.imageUrl ? "" : "bg-muted"
               )}
             >
               {item.imageUrl && (
@@ -147,7 +147,7 @@ export default function PortfolioPage() {
 
             {/* Label */}
             {editingId === item.id ? (
-              <div className="absolute right-0 bottom-0 left-0 flex items-center gap-1.5 bg-white/90 px-3 py-2">
+              <div className="absolute right-0 bottom-0 left-0 flex items-center gap-1.5 bg-black/85 px-3 py-2">
                 <input
                   autoFocus
                   value={editName}
@@ -156,17 +156,17 @@ export default function PortfolioPage() {
                     if (e.key === "Enter") handleEditSave()
                     if (e.key === "Escape") setEditingId(null)
                   }}
-                  className="flex-1 rounded border px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="flex-1 rounded border border-white/15 bg-white/10 px-2 py-1 text-sm text-white focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <button
                   onClick={handleEditSave}
-                  className="cursor-pointer rounded bg-primary p-1 text-white"
+                  className="cursor-pointer rounded bg-primary p-1 text-primary-foreground"
                 >
                   <Check size={14} />
                 </button>
                 <button
                   onClick={() => setEditingId(null)}
-                  className="cursor-pointer rounded bg-gray-200 p-1 text-gray-700"
+                  className="cursor-pointer rounded bg-white/10 p-1 text-white"
                 >
                   <X size={14} />
                 </button>
@@ -180,7 +180,7 @@ export default function PortfolioPage() {
                       ? "text-white"
                       : item.imageUrl
                         ? "text-white drop-shadow"
-                        : "text-[#3a6352]"
+                        : "text-muted-foreground"
                   )}
                 >
                   {item.name}
@@ -191,7 +191,7 @@ export default function PortfolioPage() {
             {/* Placeholder icon */}
             {!item.imageUrl && hoveredId !== item.id && (
               <div className="absolute inset-0 flex items-center justify-center pb-8">
-                <ImageIcon size={36} className="text-[#3a6352]" strokeWidth={1.5} />
+                <ImageIcon size={36} className="text-muted-foreground" strokeWidth={1.5} />
               </div>
             )}
           </div>
@@ -200,13 +200,13 @@ export default function PortfolioPage() {
         {/* Upload placeholder card */}
         <button
           onClick={handleAddUploadClick}
-          className="group aspect-[3/4] cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:border-primary hover:bg-green-50"
+          className="group aspect-[3/4] cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed border-white/15 bg-card transition-colors hover:border-primary hover:bg-primary/5"
         >
           <div className="flex h-full flex-col items-center justify-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 transition-colors group-hover:bg-primary/10">
-              <Plus size={20} className="text-gray-500 group-hover:text-primary" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted transition-colors group-hover:bg-primary/10">
+              <Plus size={20} className="text-muted-foreground group-hover:text-primary" />
             </div>
-            <span className="text-sm text-gray-500 group-hover:text-primary">
+            <span className="text-sm text-muted-foreground group-hover:text-primary">
               Click to upload a photo
             </span>
           </div>

@@ -101,7 +101,7 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar className="border-r bg-white">
+    <Sidebar className="border-r bg-sidebar">
       <SidebarContent className="px-3">
         <SidebarGroup>
           {/* LOGO + PROFILE */}
@@ -109,22 +109,21 @@ export function AppSidebar() {
             <div className="mt-8 flex w-full flex-col gap-5">
               {/* LOGO */}
               <div className="flex items-center gap-3 transition-opacity">
-                <div className="rounded-md bg-primary p-1 text-white shadow-sm">
-                  <SidebarTrigger className="cursor-pointer hover:bg-primary hover:text-white hover:opacity-80" />
+                <div className="rounded-md bg-primary p-1 text-primary-foreground shadow-sm">
+                  <SidebarTrigger className="cursor-pointer hover:bg-primary hover:text-primary-foreground hover:opacity-80" />
                 </div>
                 <div className="flex flex-1 items-center justify-between gap-2">
                   <div className="flex flex-col">
-                    <span className="text-lg font-extrabold tracking-tight text-black">
-                      SALORA
+                    <span className="text-lg font-extrabold tracking-tight text-white">
+                      Sal<span className="text-primary">ora</span>
                     </span>
-
                     <span className="text-xs text-muted-foreground">
                       Salon Dashboard
                     </span>
                   </div>
                   <LogOut
                     onClick={() => setShowLogoutDialog(true)}
-                    className="cursor-pointer text-gray-600 transition-transform duration-200"
+                    className="cursor-pointer text-muted-foreground transition-transform duration-200"
                     size={20}
                   />{" "}
                 </div>
@@ -154,7 +153,7 @@ export function AppSidebar() {
                     </>
                   ) : (
                     <>
-                      <span className="truncate text-sm font-semibold text-black">
+                      <span className="truncate text-sm font-semibold text-white">
                         {user?.fullName || "Guest User"}
                       </span>
                       <span className="truncate text-xs text-muted-foreground">
@@ -182,8 +181,8 @@ export function AppSidebar() {
                           className={cn(
                             "flex items-center gap-3 rounded-xl px-3 py-6 text-sm font-medium transition-all",
                             isActive
-                              ? "bg-primary text-white shadow-sm hover:bg-primary! hover:text-white"
-                              : "hover:bg-primary"
+                              ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary! hover:text-primary-foreground"
+                              : "hover:bg-primary hover:text-primary-foreground"
                           )}
                         >
                           <item.icon size={18} />
@@ -202,8 +201,8 @@ export function AppSidebar() {
                   className={cn(
                     "mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all",
                     pathname === "/dashboard/settings"
-                      ? "bg-primary text-white shadow-sm"
-                      : "text-gray-600 hover:bg-muted"
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-muted"
                   )}
                 >
                   <Settings size={18} />
@@ -231,7 +230,7 @@ export function AppSidebar() {
                       </>
                     ) : (
                       <>
-                        <span className="truncate text-sm font-semibold text-black">
+                        <span className="truncate text-sm font-semibold text-white">
                           {user?.fullName || "Guest User"}
                         </span>
                         <span className="truncate text-xs text-muted-foreground">
@@ -266,7 +265,7 @@ export function AppSidebar() {
             <button
               onClick={handleLogout}
               disabled={signingOut}
-              className="cursor-pointer rounded-md bg-primary px-4 py-2 text-sm text-white disabled:opacity-50"
+              className="cursor-pointer rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground disabled:opacity-50"
             >
               {signingOut ? "Signing out…" : "Sign out"}
             </button>

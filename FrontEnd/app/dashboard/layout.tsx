@@ -16,10 +16,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   const { open } = useSidebar()
 
   return (
-    <main className="flex-1 bg-[#f2ede6]">
+    <main className="flex-1 bg-background">
       {!open && (
         <div className="p-4">
-          <SidebarTrigger className="cursor-pointer bg-primary p-4 text-white hover:bg-primary hover:text-white hover:opacity-80" />
+          <SidebarTrigger className="cursor-pointer bg-primary p-4 text-primary-foreground hover:bg-primary hover:text-primary-foreground hover:opacity-80" />
         </div>
       )}
 

@@ -23,7 +23,9 @@ function TabButton({
       onClick={onClick}
       className={cn(
         "w-full cursor-pointer rounded-xl px-4 py-2.5 text-left text-sm font-medium transition-colors",
-        active ? "bg-primary text-white" : "text-gray-600 hover:bg-gray-100"
+        active
+          ? "bg-primary text-primary-foreground"
+          : "text-muted-foreground hover:bg-white/5"
       )}
     >
       {children}
@@ -37,7 +39,7 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+        <h1 className="text-2xl font-bold text-white">Settings</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">
           Manage your salon profile and preferences
         </p>
@@ -59,7 +61,7 @@ export default function SettingsPage() {
           </TabButton>
         </nav>
 
-        <div className="flex-1 rounded-2xl bg-white p-8 shadow-sm">
+        <div className="flex-1 rounded-2xl border border-white/10 bg-card p-8 shadow-sm">
           {tab === "profile" && <SalonProfileTab />}
           {tab === "hours" && <OpeningHoursTab />}
           {tab === "staff" && <StaffTab />}

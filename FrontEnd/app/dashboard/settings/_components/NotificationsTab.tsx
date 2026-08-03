@@ -148,7 +148,7 @@ export function NotificationsTab() {
 
   return (
     <div>
-      <h2 className="mb-2 text-lg font-bold text-gray-900">Notifications</h2>
+      <h2 className="mb-2 text-lg font-bold text-white">Notifications</h2>
       <p className="mb-6 text-sm text-muted-foreground">
         Choose which alerts you want to receive by email.
       </p>
@@ -156,10 +156,10 @@ export function NotificationsTab() {
         {notifs.map((n) => (
           <div
             key={n.id}
-            className="flex items-center justify-between rounded-xl border bg-white px-5 py-4"
+            className="flex items-center justify-between rounded-xl border border-white/10 bg-card px-5 py-4"
           >
             <div>
-              <p className="text-sm font-semibold text-gray-900">{n.label}</p>
+              <p className="text-sm font-semibold text-white">{n.label}</p>
               <p className="text-xs text-muted-foreground">{n.description}</p>
             </div>
             <label className="relative inline-flex cursor-pointer items-center">
@@ -169,7 +169,7 @@ export function NotificationsTab() {
                 onChange={() => toggle(n.id)}
                 className="peer sr-only"
               />
-              <div className="peer h-5 w-9 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-4" />
+              <div className="peer h-5 w-9 rounded-full bg-white/15 transition-colors peer-checked:bg-primary after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-4" />
             </label>
           </div>
         ))}
@@ -178,7 +178,7 @@ export function NotificationsTab() {
         <button
           onClick={handleSave}
           disabled={isPending}
-          className="cursor-pointer rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+          className="cursor-pointer rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
         >
           {isPending ? "Saving…" : "Save changes"}
         </button>

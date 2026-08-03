@@ -28,7 +28,7 @@ interface Service {
 const CATEGORIES = ["Haircut", "Beard", "Grooming", "Color", "Treatment"]
 
 const inputCls =
-  "w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-primary focus:outline-none"
+  "w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary focus:outline-none"
 
 const successToast = {
   toast: "!bg-green-50 !border !border-green-400",
@@ -179,11 +179,11 @@ export default function ServicesPage() {
   const isPending = createMutation.isPending || updateMutation.isPending
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen bg-background p-8">
       {/* Header */}
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Services</h1>
+          <h1 className="text-2xl font-bold text-white">Services</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
             {services.length} service{services.length !== 1 ? "s" : ""} across{" "}
             {categories.length} categor{categories.length !== 1 ? "ies" : "y"}
@@ -212,8 +212,8 @@ export default function ServicesPage() {
             )
             return (
               <div key={category}>
-                <div className="mb-3 flex items-center justify-between border-b pb-2">
-                  <h2 className="text-base font-semibold text-gray-900">
+                <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
+                  <h2 className="text-base font-semibold text-white">
                     {category}
                   </h2>
                   <span className="text-sm text-muted-foreground">
@@ -226,24 +226,24 @@ export default function ServicesPage() {
                   {categoryServices.map((service) => (
                     <div
                       key={service.id}
-                      className="relative rounded-2xl border bg-white p-5 shadow-sm"
+                      className="relative rounded-2xl border border-white/10 bg-card p-5"
                     >
                       <div className="absolute top-4 right-4 flex items-center gap-2">
                         <button
                           onClick={() => openEdit(service)}
-                          className="cursor-pointer text-gray-400 transition-colors hover:text-primary"
+                          className="cursor-pointer text-muted-foreground transition-colors hover:text-primary"
                         >
                           <Pencil size={14} />
                         </button>
                         <button
                           onClick={() => setConfirmId(service.id)}
-                          className="cursor-pointer text-gray-400 transition-colors hover:text-red-500"
+                          className="cursor-pointer text-muted-foreground transition-colors hover:text-red-400"
                         >
                           <X size={16} />
                         </button>
                       </div>
 
-                      <p className="pr-14 text-sm font-bold text-gray-900">
+                      <p className="pr-14 text-sm font-bold text-white">
                         {service.name}
                       </p>
 
@@ -252,7 +252,7 @@ export default function ServicesPage() {
                         <span className="text-sm text-muted-foreground">
                           {service.duration} min
                         </span>
-                        <span className="text-sm font-bold text-gray-900">
+                        <span className="text-sm font-bold text-white">
                           {service.price} MAD
                         </span>
                       </div>
@@ -299,7 +299,7 @@ export default function ServicesPage() {
               {/* Category + Name */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-gray-700">
+                  <label className="text-xs font-semibold text-muted-foreground">
                     Category <span className="text-red-500">*</span>
                   </label>
                   <form.Field name="category">
@@ -320,7 +320,7 @@ export default function ServicesPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-gray-700">
+                  <label className="text-xs font-semibold text-muted-foreground">
                     Service name <span className="text-red-500">*</span>
                   </label>
                   <form.Field
@@ -357,7 +357,7 @@ export default function ServicesPage() {
               {/* Duration + Price */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-gray-700">
+                  <label className="text-xs font-semibold text-muted-foreground">
                     Duration (min) <span className="text-red-500">*</span>
                   </label>
                   <form.Field
@@ -390,7 +390,7 @@ export default function ServicesPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-gray-700">
+                  <label className="text-xs font-semibold text-muted-foreground">
                     Price (MAD) <span className="text-red-500">*</span>
                   </label>
                   <form.Field
@@ -469,7 +469,7 @@ export default function ServicesPage() {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <button className="cursor-pointer rounded-md border px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+              <button className="cursor-pointer rounded-md border border-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/5">
                 Cancel
               </button>
             </DialogClose>

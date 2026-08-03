@@ -243,18 +243,18 @@ export function SalonProfileTab() {
 
   return (
     <div>
-      <h2 className="mb-6 text-lg font-bold text-gray-900">Salon Profile</h2>
+      <h2 className="mb-6 text-lg font-bold text-white">Salon Profile</h2>
 
       {/* Open / Closed toggle */}
-      <div className="mb-6 flex items-center justify-between rounded-xl border bg-white px-5 py-4">
+      <div className="mb-6 flex items-center justify-between rounded-xl border border-white/10 bg-card px-5 py-4">
         <div>
-          <p className="text-sm font-semibold text-gray-900">Salon status</p>
+          <p className="text-sm font-semibold text-white">Salon status</p>
           <p className="text-xs text-muted-foreground">
             Controls the open / closed badge on your public booking page
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <span className={isOpen ? "text-xs font-semibold text-emerald-600" : "text-xs font-semibold text-red-500"}>
+          <span className={isOpen ? "text-xs font-semibold text-primary" : "text-xs font-semibold text-red-500"}>
             {isOpen ? "Open" : "Closed"}
           </span>
           <label className={`relative inline-flex items-center ${updateStatusMutation.isPending ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}>
@@ -265,13 +265,13 @@ export function SalonProfileTab() {
               onChange={() => updateStatusMutation.mutate(!isOpen)}
               className="peer sr-only"
             />
-            <div className={`peer h-5 w-9 rounded-full transition-colors after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-4 ${isOpen ? "bg-emerald-500" : "bg-gray-300"}`} />
+            <div className={`peer h-5 w-9 rounded-full transition-colors after:absolute after:top-0.5 after:left-0.5 after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-4 ${isOpen ? "bg-primary" : "bg-white/15"}`} />
           </label>
         </div>
       </div>
 
       <div className="mb-6 flex items-center gap-5">
-        <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-[#f2ede6] text-xl font-bold text-gray-600">
+        <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-[#1a1a1a] text-xl font-bold text-muted-foreground">
           {effectivePreviewUrl ? (
             <img alt="Salon logo" className="size-full object-cover" src={effectivePreviewUrl} />
           ) : (
@@ -279,12 +279,12 @@ export function SalonProfileTab() {
           )}
         </div>
         <div>
-          <p className="mb-2 text-sm font-semibold text-gray-900">Salon logo</p>
+          <p className="mb-2 text-sm font-semibold text-white">Salon logo</p>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={openFileDialog}
-              className="cursor-pointer rounded-lg border px-4 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              className="cursor-pointer rounded-lg border border-white/20 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-white/5"
             >
               Upload logo
             </button>
@@ -292,7 +292,7 @@ export function SalonProfileTab() {
               <button
                 type="button"
                 onClick={() => removeFile(files[0].id)}
-                className="cursor-pointer rounded-lg border px-4 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                className="cursor-pointer rounded-lg border border-white/20 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-white/5"
               >
                 Remove
               </button>
@@ -302,7 +302,7 @@ export function SalonProfileTab() {
         </div>
       </div>
 
-      <div className="mb-6 h-px bg-gray-100" />
+      <div className="mb-6 h-px bg-white/10" />
 
       <form
         onSubmit={(e) => {
@@ -379,7 +379,7 @@ export function SalonProfileTab() {
             <form.Field name="instagram">
               {(field) => (
                 <div>
-                  <div className="flex items-center rounded-xl border bg-[#f2ede6] focus-within:ring-2 focus-within:ring-primary/30">
+                  <div className="flex items-center rounded-xl border border-white/10 bg-[#1a1a1a] focus-within:ring-2 focus-within:ring-primary/30">
                     <span className="pl-3 text-sm text-muted-foreground">@</span>
                     <input
                       value={field.state.value}
@@ -452,13 +452,13 @@ export function SalonProfileTab() {
       <div className="mt-8 flex gap-3">
         <button
           onClick={() => form.handleSubmit()}
-          className="cursor-pointer rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          className="cursor-pointer rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           {updateSalonMutation.isPending || addSalonMutation.isPending ? "Saving..." : "Save changes"}
         </button>
         <button
           onClick={() => form.reset()}
-          className="cursor-pointer rounded-md border px-6 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+          className="cursor-pointer rounded-md border border-white/20 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/5"
         >
           Cancel
         </button>

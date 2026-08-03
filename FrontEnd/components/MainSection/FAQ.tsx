@@ -1,21 +1,24 @@
 "use client"
 
 import { useState } from "react"
+import { Reveal } from "@/components/Reveal"
 
 const COLORS = {
-  primary: "#1B4332",
-  primaryLight: "#52B788",
-  bg: "#F8F5F0",
-  warm: "#F0EDE8",
-  border: "#E2DDD8",
-  text: "#0D1B14",
-  textMuted: "#6B7C74",
+  primary: "#D4A954",
+  primaryLight: "#E8C374",
+  bg: "#0A0A0A",
+  warm: "#1A1A1A",
+  card: "#141414",
+  border: "rgba(255,255,255,0.1)",
+  text: "#FFFFFF",
+  textMuted: "#A3A3A3",
+  onPrimary: "#171208",
 }
 
 const FAQ_ITEMS = [
   {
     q: "Is it really free forever?",
-    a: "Yes. The first 50 barbers who join get free lifetime access to all Pro features — no subscription, no trial ending, no hidden fees. Ever.",
+    a: "Yes. The first 50 salons who join — barbershops and beauty salons alike — get free lifetime access to all Pro features — no subscription, no trial ending, no hidden fees. Ever.",
   },
   {
     q: "How will you contact me?",
@@ -31,7 +34,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "How long does setup take?",
-    a: "Most barbers are fully set up in under 10 minutes. We'll help you on a personal call so nothing goes wrong.",
+    a: "Most salon and barbershop owners are fully set up in under 10 minutes. We'll help you on a personal call so nothing goes wrong.",
   },
   {
     q: "Can I cancel anytime?",
@@ -83,7 +86,7 @@ function FaqItem({
             borderRadius: "50%",
             flexShrink: 0,
             background: isOpen ? COLORS.primary : COLORS.warm,
-            color: isOpen ? "white" : COLORS.primary,
+            color: isOpen ? COLORS.onPrimary : COLORS.primary,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -115,7 +118,7 @@ function FaqItem({
   )
 }
 
-export default function SalonFlowFaq() {
+export default function FaqSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(0)
 
   return (
@@ -130,6 +133,7 @@ export default function SalonFlowFaq() {
     >
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         {/* Header */}
+        <Reveal>
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <div
             style={{
@@ -187,6 +191,7 @@ export default function SalonFlowFaq() {
             Everything you need to know before joining the waitlist.
           </p>
         </div>
+        </Reveal>
 
         {/* List */}
         <div>
@@ -202,11 +207,12 @@ export default function SalonFlowFaq() {
         </div>
 
         {/* Still have questions */}
+        <Reveal>
         <div
           style={{
             marginTop: 48,
             padding: "28px 32px",
-            background: "white",
+            background: COLORS.card,
             border: `1px solid ${COLORS.border}`,
             borderRadius: 16,
             display: "flex",
@@ -240,14 +246,22 @@ export default function SalonFlowFaq() {
               background: COLORS.primary,
               border: "none",
               borderRadius: 10,
-              color: "white",
+              color: COLORS.onPrimary,
               fontSize: 14,
               fontWeight: 700,
               textDecoration: "none",
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              transition: "background 0.15s",
+              transition: "background 0.15s, transform 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = COLORS.primaryLight
+              e.currentTarget.style.transform = "translateY(-1px)"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = COLORS.primary
+              e.currentTarget.style.transform = "translateY(0)"
             }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -256,6 +270,7 @@ export default function SalonFlowFaq() {
             Message us on WhatsApp
           </a>
         </div>
+        </Reveal>
       </div>
     </section>
   )

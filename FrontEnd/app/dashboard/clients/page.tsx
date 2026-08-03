@@ -39,7 +39,7 @@ interface Client {
 }
 
 const inputCls =
-  "w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-primary focus:outline-none"
+  "w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary focus:outline-none"
 
 function getInitials(name: string) {
   return name
@@ -198,11 +198,11 @@ export default function ClientsPage() {
   const isPending = createMutation.isPending || updateMutation.isPending
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen bg-background p-8">
       {/* Header */}
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
+          <h1 className="text-2xl font-bold text-white">Clients</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
             {clients.length} clients in your database
           </p>
@@ -224,13 +224,13 @@ export default function ClientsPage() {
           placeholder="Search by name or phone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border bg-white py-2.5 pr-4 pl-9 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+          className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] py-2.5 pr-4 pl-9 text-sm text-white focus:ring-2 focus:ring-primary focus:outline-none"
         />
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
-        <div className="grid grid-cols-[2fr_1.5fr_0.7fr_1fr_1.2fr_1.5fr_80px] border-b px-6 py-3">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-card">
+        <div className="grid grid-cols-[2fr_1.5fr_0.7fr_1fr_1.2fr_1.5fr_80px] border-b border-white/10 px-6 py-3">
           {[
             "CLIENT",
             "PHONE",
@@ -259,37 +259,37 @@ export default function ClientsPage() {
               <div
                 key={client.id}
                 className={cn(
-                  "grid grid-cols-[2fr_1.5fr_0.7fr_1fr_1.2fr_1.5fr_80px] items-center px-6 py-4 transition-colors hover:bg-gray-50",
-                  idx !== filtered.length - 1 && "border-b"
+                  "grid grid-cols-[2fr_1.5fr_0.7fr_1fr_1.2fr_1.5fr_80px] items-center px-6 py-4 transition-colors hover:bg-white/5",
+                  idx !== filtered.length - 1 && "border-b border-white/10"
                 )}
               >
                 {/* Client */}
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-stone-200 text-xs font-semibold text-stone-600">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-white">
                     {getInitials(client.name)}
                   </div>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-semibold text-white">
                     {client.name}
                   </span>
                 </div>
 
                 {/* Phone */}
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-muted-foreground">
                   {client.phone || "—"}
                 </span>
 
                 {/* Visits */}
-                <span className="inline-flex h-6 w-10 items-center justify-center rounded-full bg-stone-100 text-xs font-semibold text-gray-700">
+                <span className="inline-flex h-6 w-10 items-center justify-center rounded-full bg-muted text-xs font-semibold text-white">
                   {client.visits}×
                 </span>
 
                 {/* Last visit */}
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-muted-foreground">
                   {formatDate(client.last_visit)}
                 </span>
 
                 {/* Total spend */}
-                <span className="text-sm font-bold text-gray-900">
+                <span className="text-sm font-bold text-white">
                   {client.total_spend > 0 ? `${client.total_spend} MAD` : "—"}
                 </span>
 
@@ -302,13 +302,13 @@ export default function ClientsPage() {
                 <div className="flex items-center justify-end gap-2">
                   <button
                     onClick={() => openEdit(client)}
-                    className="cursor-pointer text-gray-400 transition-colors hover:text-primary"
+                    className="cursor-pointer text-muted-foreground transition-colors hover:text-primary"
                   >
                     <Pencil size={15} />
                   </button>
                   <button
                     onClick={() => setConfirmId(client.id)}
-                    className="cursor-pointer text-gray-400 transition-colors hover:text-red-500"
+                    className="cursor-pointer text-muted-foreground transition-colors hover:text-red-400"
                   >
                     <Trash2 size={15} />
                   </button>
@@ -323,7 +323,7 @@ export default function ClientsPage() {
                     </DrawerTrigger>
 
                     <DrawerContent className="flex flex-col">
-                      <DrawerHeader className="flex items-center justify-between border-b pb-4">
+                      <DrawerHeader className="flex items-center justify-between border-b border-white/10 pb-4">
                         <DrawerTitle className="text-lg font-semibold">
                           Client profile
                         </DrawerTitle>
@@ -338,10 +338,10 @@ export default function ClientsPage() {
 
                       <div className="no-scrollbar flex-1 overflow-y-auto px-6 py-6">
                         <div className="mb-6 flex flex-col items-center gap-2 text-center">
-                          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-stone-200 text-xl font-bold text-stone-600">
+                          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted text-xl font-bold text-white">
                             {getInitials(client.name)}
                           </div>
-                          <p className="text-lg font-bold text-gray-900">
+                          <p className="text-lg font-bold text-white">
                             {client.name}
                           </p>
                           <p className="text-sm text-muted-foreground">
@@ -349,7 +349,7 @@ export default function ClientsPage() {
                           </p>
                         </div>
 
-                        <hr className="mb-5" />
+                        <hr className="mb-5 border-white/10" />
 
                         <div className="mb-5 grid grid-cols-2 gap-3">
                           {[
@@ -371,12 +371,12 @@ export default function ClientsPage() {
                           ].map(({ label, value }) => (
                             <div
                               key={label}
-                              className="rounded-xl bg-stone-100 px-4 py-3"
+                              className="rounded-xl bg-muted px-4 py-3"
                             >
                               <p className="text-xs text-muted-foreground">
                                 {label}
                               </p>
-                              <p className="mt-0.5 text-base font-bold text-gray-900">
+                              <p className="mt-0.5 text-base font-bold text-white">
                                 {value}
                               </p>
                             </div>
@@ -384,20 +384,20 @@ export default function ClientsPage() {
                         </div>
 
                         {client.note && (
-                          <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-                            <p className="mb-1 text-xs font-semibold text-amber-700">
+                          <div className="mb-5 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3">
+                            <p className="mb-1 text-xs font-semibold text-amber-400">
                               Note
                             </p>
-                            <p className="text-sm text-amber-800">
+                            <p className="text-sm text-amber-300">
                               {client.note}
                             </p>
                           </div>
                         )}
 
-                        <hr className="mb-5" />
+                        <hr className="mb-5 border-white/10" />
 
                         <div>
-                          <p className="mb-3 text-sm font-bold text-gray-900">
+                          <p className="mb-3 text-sm font-bold text-white">
                             Recent bookings
                           </p>
                           <p className="py-3 text-sm text-muted-foreground">
@@ -460,7 +460,7 @@ export default function ClientsPage() {
               {/* Name + Phone */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-gray-700">
+                  <label className="text-xs font-semibold text-muted-foreground">
                     Full name <span className="text-red-500">*</span>
                   </label>
                   <form.Field
@@ -496,7 +496,7 @@ export default function ClientsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-gray-700">
+                  <label className="text-xs font-semibold text-muted-foreground">
                     Phone number
                   </label>
                   <form.Field name="phone">
@@ -515,7 +515,7 @@ export default function ClientsPage() {
 
               {/* Note */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-700">
+                <label className="text-xs font-semibold text-muted-foreground">
                   Internal notes
                 </label>
                 <form.Field name="note">
@@ -525,7 +525,7 @@ export default function ClientsPage() {
                       placeholder="e.g. Prefers short sides, allergic to certain products..."
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      className="w-full resize-none rounded-xl border bg-white px-4 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-primary focus:outline-none"
+                      className="w-full resize-none rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary focus:outline-none"
                     />
                   )}
                 </form.Field>
@@ -581,7 +581,7 @@ export default function ClientsPage() {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <button className="cursor-pointer rounded-md border px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+              <button className="cursor-pointer rounded-md border border-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/5">
                 Cancel
               </button>
             </DialogClose>

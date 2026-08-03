@@ -1,24 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-
-// ─── Tokens (match Salora brand) ───
-const COLORS = {
-  primary: '#1B4332',
-  primaryDeep: '#0D1B14',
-  primaryLight: '#52B788',
-  accent: '#95D5B2',
-  accentSoft: '#DCFCE7',
-  bg: '#F8F5F0',
-  warm: '#F0EDE8',
-  warmDeep: '#E8E2D9',
-  border: '#E2DDD8',
-  text: '#0D1B14',
-  textMuted: '#6B7C74',
-  surface: '#FFFFFF',
-  pendingBg: '#FEF3C7',
-  pendingText: '#92400E',
-};
+import {
+  LayoutDashboard,
+  Calendar,
+  Users,
+  BriefcaseBusiness,
+  TrendingUp,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  type LucideIcon,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 // ─── Data ───
 const STATS = [
@@ -35,23 +29,23 @@ const APPOINTMENTS = [
   { time: '14:00', name: 'Mehdi Chaoui', service: 'Beard Styling', status: 'confirmed' },
 ];
 
-const NAV = [
-  { id: 'dashboard', label: 'Dashboard', icon: 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z' },
-  { id: 'bookings', label: 'Bookings', icon: 'M3 4h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM16 2v4M8 2v4M3 10h18' },
-  { id: 'clients', label: 'Clients', icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0 8 4 4 0 0 0 0-8z' },
-  { id: 'services', label: 'Services', icon: 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77 5.82 21.02 7 14.14 2 9.27l6.91-1.01L12 2z' },
-  { id: 'analytics', label: 'Analytics', icon: 'M12 2v10l4 2M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z' },
+const NAV: { id: string; label: string; icon: LucideIcon }[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'bookings', label: 'Bookings', icon: Calendar },
+  { id: 'clients', label: 'Clients', icon: Users },
+  { id: 'services', label: 'Services', icon: BriefcaseBusiness },
+  { id: 'analytics', label: 'Analytics', icon: TrendingUp },
 ];
+
+const SETTINGS_ITEM = { id: 'settings', label: 'Settings', icon: Settings };
 
 // April 2026 calendar (Mon-first), with sample booked days
 const BOOKED_DAYS = [2, 3, 8, 10, 14, 17, 20, 22, 23];
 const TODAY = 28;
 
 function buildCalendar() {
-  const days: (number | null)[] = [];
-  days.push(31);
-  for (let d = 1; d <= 6; d++) days.push(d);
-  for (let d = 7; d <= 30; d++) days.push(d);
+  const days: (number | null)[] = [31];
+  for (let d = 1; d <= 30; d++) days.push(d);
   return days;
 }
 
@@ -63,83 +57,34 @@ function NavItem({
   active,
   onClick,
 }: {
-  item: (typeof NAV)[number];
+  item: { id: string; label: string; icon: LucideIcon };
   active: boolean;
   onClick: () => void;
 }) {
+  const Icon = item.icon;
   return (
     <button
       onClick={onClick}
-      className="sfp-nav-btn"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 12,
-        width: '100%',
-        padding: '12px 16px',
-        borderRadius: 10,
-        border: 'none',
-        background: active ? COLORS.primary : 'transparent',
-        color: active ? 'white' : COLORS.text,
-        fontFamily: 'inherit',
-        fontSize: 14,
-        fontWeight: active ? 600 : 500,
-        cursor: 'pointer',
-        textAlign: 'left',
-        transition: 'background 0.15s',
-      }}
-      onMouseEnter={(e) => {
-        if (!active) e.currentTarget.style.background = COLORS.warm;
-      }}
-      onMouseLeave={(e) => {
-        if (!active) e.currentTarget.style.background = 'transparent';
-      }}
+      className={cn(
+        'flex w-full items-center gap-3 rounded-[10px] px-4 py-3 text-left text-sm font-medium transition-colors',
+        'sm:justify-center sm:gap-0 sm:p-3 lg:justify-start lg:gap-3 lg:px-4 lg:py-3',
+        active ? 'bg-[#D4A954] font-semibold text-[#171208]' : 'text-white hover:bg-white/5',
+      )}
     >
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        style={{ flexShrink: 0 }}
-      >
-        <path d={item.icon} />
-      </svg>
-      <span className="sfp-nav-label">{item.label}</span>
+      <Icon size={18} className="shrink-0" />
+      <span className="sm:hidden lg:inline">{item.label}</span>
     </button>
   );
 }
 
 function StatCard({ label, value, delta }: (typeof STATS)[number]) {
   return (
-    <div
-      style={{
-        background: COLORS.warm,
-        border: `1px solid ${COLORS.border}`,
-        borderRadius: 14,
-        padding: '20px 22px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 8,
-      }}
-    >
-      <div style={{ fontSize: 13, color: COLORS.textMuted, fontWeight: 500 }}>{label}</div>
-      <div className="sfp-stat-value"
-        style={{
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-          fontSize: 36,
-          fontWeight: 800,
-          color: COLORS.text,
-          letterSpacing: '-1px',
-          lineHeight: 1,
-        }}
-      >
+    <div className="flex flex-col gap-2 rounded-[14px] border border-white/10 bg-[#141414] px-[22px] py-5">
+      <div className="text-[13px] font-medium text-neutral-400">{label}</div>
+      <div className="font-[Plus_Jakarta_Sans,sans-serif] text-2xl leading-none font-extrabold tracking-[-1px] text-white sm:text-[28px] lg:text-4xl">
         {value}
       </div>
-      <div style={{ fontSize: 12, color: COLORS.primaryLight, fontWeight: 600 }}>{delta}</div>
+      <div className="text-xs font-semibold text-green-400">{delta}</div>
     </div>
   );
 }
@@ -147,46 +92,19 @@ function StatCard({ label, value, delta }: (typeof STATS)[number]) {
 function AppointmentRow({ appt }: { appt: (typeof APPOINTMENTS)[number] }) {
   const isPending = appt.status === 'pending';
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        padding: '14px 16px',
-        background: 'white',
-        border: `1px solid ${COLORS.border}`,
-        borderRadius: 12,
-      }}
-    >
-      <div
-        style={{
-          background: COLORS.warm,
-          padding: '6px 10px',
-          borderRadius: 8,
-          fontSize: 13,
-          fontWeight: 700,
-          color: COLORS.text,
-          minWidth: 56,
-          textAlign: 'center',
-          flexShrink: 0,
-        }}
-      >
+    <div className="flex items-center gap-3.5 rounded-xl border border-white/10 bg-[#141414] px-4 py-3.5">
+      <div className="min-w-14 shrink-0 rounded-lg bg-[#0A0A0A] px-2.5 py-1.5 text-center text-[13px] font-bold text-white">
         {appt.time}
       </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.text, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{appt.name}</div>
-        <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{appt.service}</div>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-bold text-white">{appt.name}</div>
+        <div className="mt-0.5 truncate text-xs text-neutral-400">{appt.service}</div>
       </div>
       <span
-        style={{
-          fontSize: 11,
-          fontWeight: 700,
-          padding: '4px 10px',
-          borderRadius: 100,
-          background: isPending ? COLORS.pendingBg : COLORS.accentSoft,
-          color: isPending ? COLORS.pendingText : COLORS.primary,
-          flexShrink: 0,
-        }}
+        className={cn(
+          'shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold',
+          isPending ? 'bg-amber-500/15 text-amber-400' : 'bg-green-400/15 text-green-400',
+        )}
       >
         {isPending ? 'Pending' : 'Confirmed'}
       </span>
@@ -195,47 +113,21 @@ function AppointmentRow({ appt }: { appt: (typeof APPOINTMENTS)[number] }) {
 }
 
 function CalendarCell({ day }: { day: number | null }) {
-  if (day === null)
-    return <div style={{ aspectRatio: '1', background: 'transparent' }} />;
+  if (day === null) return <div className="aspect-square" />;
 
   const isToday = day === TODAY;
   const isBooked = BOOKED_DAYS.includes(day);
-
-  let bg = 'transparent';
-  let color = COLORS.text;
-  let fontWeight: 400 | 600 | 700 | 800 = 500;
-
-  if (isToday) {
-    bg = COLORS.primaryDeep;
-    color = 'white';
-    fontWeight = 800;
-  } else if (isBooked) {
-    bg = COLORS.accent;
-    color = COLORS.primaryDeep;
-    fontWeight = 700;
-  }
+  const isPrevMonth = day === 31;
 
   return (
     <div
-      style={{
-        aspectRatio: '1',
-        borderRadius: 10,
-        background: bg,
-        color: day === 31 ? COLORS.textMuted : color,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 14,
-        fontWeight,
-        cursor: 'pointer',
-        transition: 'transform 0.15s',
-      }}
-      onMouseEnter={(e) => {
-        if (!isToday && !isBooked) e.currentTarget.style.background = COLORS.warm;
-      }}
-      onMouseLeave={(e) => {
-        if (!isToday && !isBooked) e.currentTarget.style.background = 'transparent';
-      }}
+      className={cn(
+        'flex aspect-square cursor-pointer items-center justify-center rounded-[10px] text-sm transition-colors',
+        isToday && 'bg-[#D4A954] font-extrabold text-[#171208]',
+        !isToday && isBooked && 'bg-[#D4A954]/[0.22] font-bold text-[#D4A954]',
+        !isToday && !isBooked && 'font-medium hover:bg-white/5',
+        !isToday && !isBooked && (isPrevMonth ? 'text-neutral-400' : 'text-white'),
+      )}
     >
       {day}
     </div>
@@ -247,328 +139,111 @@ export default function SaloraDashboardPreview() {
   const [activeNav, setActiveNav] = useState('dashboard');
 
   return (
-    <>
-      <style>{`
-        .sfp-root {
-          background: white;
-          border-radius: 24px;
-          overflow: hidden;
-          box-shadow: 0 24px 80px rgba(27,67,50,0.18);
-          border: 1px solid ${COLORS.border};
-          font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-          color: ${COLORS.text};
-          max-width: 1280px;
-          margin: 0 auto;
-        }
-        .sfp-body {
-          display: grid;
-          grid-template-columns: 240px 1fr;
-          min-height: 680px;
-        }
-        .sfp-sidebar {
-          background: white;
-          border-right: 1px solid ${COLORS.border};
-          padding: 24px 16px;
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-        .sfp-nav-label {
-          /* visible by default */
-        }
-        .sfp-main {
-          background: ${COLORS.bg};
-          padding: 32px 36px;
-          overflow: auto;
-        }
-        .sfp-header {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          margin-bottom: 28px;
-          gap: 16px;
-        }
-        .sfp-h1 {
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: 30px;
-          font-weight: 800;
-          letter-spacing: -1px;
-          margin: 0;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .sfp-stats {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 14px;
-          margin-bottom: 28px;
-        }
-        .sfp-stat-value {
-          /* font-size set inline, overridden below */
-        }
-        .sfp-grid {
-          display: grid;
-          grid-template-columns: 1.6fr 1fr;
-          gap: 20px;
-        }
-        .sfp-new-booking-btn {
-          background: ${COLORS.primary};
-          color: white;
-          border: none;
-          padding: 12px 20px;
-          border-radius: 10px;
-          font-family: inherit;
-          font-size: 14px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: background 0.15s;
-          white-space: nowrap;
-          flex-shrink: 0;
-        }
-
-        /* Tablet: icon-only sidebar */
-        @media (max-width: 1024px) {
-          .sfp-body {
-            grid-template-columns: 60px 1fr;
-            min-height: 560px;
-          }
-          .sfp-sidebar {
-            padding: 16px 8px;
-            align-items: center;
-          }
-          .sfp-nav-label {
-            display: none;
-          }
-          .sfp-nav-btn {
-            justify-content: center;
-            padding: 12px !important;
-            gap: 0 !important;
-          }
-          .sfp-stats {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-          }
-          .sfp-stat-value {
-            font-size: 28px !important;
-          }
-          .sfp-grid {
-            grid-template-columns: 1fr;
-          }
-          .sfp-main {
-            padding: 24px 20px;
-          }
-          .sfp-h1 {
-            font-size: 22px;
-          }
-        }
-
-        /* Mobile: no sidebar */
-        @media (max-width: 640px) {
-          .sfp-root {
-            border-radius: 16px;
-          }
-          .sfp-body {
-            grid-template-columns: 1fr;
-            min-height: auto;
-          }
-          .sfp-sidebar {
-            display: none;
-          }
-          .sfp-main {
-            padding: 16px;
-          }
-          .sfp-header {
-            flex-direction: column;
-            align-items: flex-start;
-            margin-bottom: 20px;
-          }
-          .sfp-h1 {
-            font-size: 18px;
-            letter-spacing: -0.5px;
-          }
-          .sfp-new-booking-btn {
-            width: 100%;
-            text-align: center;
-          }
-          .sfp-stats {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
-          }
-          .sfp-stat-value {
-            font-size: 24px !important;
-          }
-          .sfp-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
-          }
-        }
-      `}</style>
-
-      <div className="sfp-root">
-        {/* Window chrome */}
-        <div
-          style={{
-            background: COLORS.primary,
-            padding: '14px 20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            position: 'relative',
-          }}
-        >
-          <div style={{ display: 'flex', gap: 7 }}>
-            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#FF5F57' }} />
-            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#FEBC2E' }} />
-            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#28C840' }} />
-          </div>
-          <div
-            style={{
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              color: 'rgba(255,255,255,0.85)',
-              fontSize: 13,
-              fontWeight: 600,
-            }}
-          >
-            Salora Dashboard
-          </div>
+    <div className="mx-auto max-w-[1280px] overflow-hidden rounded-2xl border border-white/10 bg-[#141414] font-[DM_Sans,system-ui,-apple-system,sans-serif] text-white shadow-[0_24px_80px_rgba(0,0,0,0.5)] sm:rounded-3xl">
+      {/* Window chrome */}
+      <div className="relative flex items-center gap-2 bg-[#D4A954] px-5 py-3.5">
+        <div className="flex gap-1.5">
+          <div className="h-3 w-3 rounded-full bg-[#FF5F57]" />
+          <div className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
+          <div className="h-3 w-3 rounded-full bg-[#28C840]" />
         </div>
-
-        {/* Body */}
-        <div className="sfp-body">
-          {/* Sidebar */}
-          <aside className="sfp-sidebar">
-            {NAV.map((item) => (
-              <NavItem
-                key={item.id}
-                item={item}
-                active={activeNav === item.id}
-                onClick={() => setActiveNav(item.id)}
-              />
-            ))}
-            <div style={{ flex: 1 }} />
-            <NavItem
-              item={{
-                id: 'settings',
-                label: 'Settings',
-                icon: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z',
-              }}
-              active={activeNav === 'settings'}
-              onClick={() => setActiveNav('settings')}
-            />
-          </aside>
-
-          {/* Main */}
-          <main className="sfp-main">
-            {/* Header */}
-            <header className="sfp-header">
-              <div>
-                <h1 className="sfp-h1">
-                  Good morning, Youssef <span style={{ fontSize: 22 }}>✦</span>
-                </h1>
-                <p style={{ color: COLORS.textMuted, fontSize: 14, marginTop: 6, margin: '6px 0 0' }}>
-                  Monday, April 28 · 3 appointments today
-                </p>
-              </div>
-              <button
-                className="sfp-new-booking-btn"
-                onMouseEnter={(e) => (e.currentTarget.style.background = COLORS.primaryDeep)}
-                onMouseLeave={(e) => (e.currentTarget.style.background = COLORS.primary)}
-              >
-                + New Booking
-              </button>
-            </header>
-
-            {/* Stats */}
-            <div className="sfp-stats">
-              {STATS.map((s) => (
-                <StatCard key={s.label} {...s} />
-              ))}
-            </div>
-
-            {/* Calendar + Appointments */}
-            <div className="sfp-grid">
-              {/* Calendar */}
-              <div
-                style={{
-                  background: COLORS.warm,
-                  border: `1px solid ${COLORS.border}`,
-                  borderRadius: 14,
-                  padding: 22,
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: COLORS.text }}>April 2026</div>
-                  <div style={{ display: 'flex', gap: 4 }}>
-                    <button
-                      aria-label="Previous month"
-                      style={{
-                        width: 28,
-                        height: 28,
-                        border: `1px solid ${COLORS.border}`,
-                        background: 'white',
-                        borderRadius: 6,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                        <path d="m15 18-6-6 6-6" />
-                      </svg>
-                    </button>
-                    <button
-                      aria-label="Next month"
-                      style={{
-                        width: 28,
-                        height: 28,
-                        border: `1px solid ${COLORS.border}`,
-                        background: 'white',
-                        borderRadius: 6,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                        <path d="m9 18 6-6-6-6" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 8 }}>
-                  {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((d) => (
-                    <div
-                      key={d}
-                      style={{ fontSize: 11, color: COLORS.textMuted, fontWeight: 600, textAlign: 'center', padding: '4px 0' }}
-                    >
-                      {d}
-                    </div>
-                  ))}
-                  {CAL_DAYS.map((d, i) => (
-                    <CalendarCell key={i} day={d} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Today's Appointments */}
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>Today's Appointments</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {APPOINTMENTS.map((a) => (
-                    <AppointmentRow key={a.time} appt={a} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </main>
+        <div className="absolute left-1/2 -translate-x-1/2 text-[13px] font-semibold text-white/85">
+          Salora Dashboard
         </div>
       </div>
-    </>
+
+      {/* Body */}
+      <div className="grid min-h-0 grid-cols-1 sm:min-h-[560px] sm:grid-cols-[60px_1fr] lg:min-h-[680px] lg:grid-cols-[240px_1fr]">
+        {/* Sidebar */}
+        <aside className="hidden flex-col gap-1.5 border-r border-white/10 bg-[#141414] sm:flex sm:items-center sm:p-4 lg:items-stretch lg:p-6">
+          {NAV.map((item) => (
+            <NavItem
+              key={item.id}
+              item={item}
+              active={activeNav === item.id}
+              onClick={() => setActiveNav(item.id)}
+            />
+          ))}
+          <div className="flex-1" />
+          <NavItem
+            item={SETTINGS_ITEM}
+            active={activeNav === 'settings'}
+            onClick={() => setActiveNav('settings')}
+          />
+        </aside>
+
+        {/* Main */}
+        <main className="overflow-auto bg-[#0A0A0A] p-4 sm:p-5 lg:p-9">
+          {/* Header */}
+          <header className="mb-5 flex flex-col items-start gap-4 sm:mb-7 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h1 className="m-0 flex items-center gap-2.5 font-[Plus_Jakarta_Sans,sans-serif] text-lg font-extrabold tracking-[-0.5px] sm:text-[22px] lg:text-3xl lg:tracking-[-1px]">
+                Good morning, Youssef <span className="text-[22px]">✦</span>
+              </h1>
+              <p className="mt-1.5 text-sm text-neutral-400">
+                Monday, April 28 · 3 appointments today
+              </p>
+            </div>
+            <button className="w-full shrink-0 rounded-[10px] bg-[#D4A954] px-5 py-3 text-sm font-bold whitespace-nowrap text-white transition-opacity hover:opacity-90 sm:w-auto">
+              + New Booking
+            </button>
+          </header>
+
+          {/* Stats */}
+          <div className="mb-4 grid grid-cols-2 gap-2 sm:mb-7 sm:gap-2.5 lg:grid-cols-4 lg:gap-3.5">
+            {STATS.map((s) => (
+              <StatCard key={s.label} {...s} />
+            ))}
+          </div>
+
+          {/* Calendar + Appointments */}
+          <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[1.6fr_1fr]">
+            {/* Calendar */}
+            <div className="rounded-[14px] border border-white/10 bg-[#141414] p-[22px]">
+              <div className="mb-4 flex items-center justify-between">
+                <div className="text-[15px] font-bold text-white">April 2026</div>
+                <div className="flex gap-1">
+                  <button
+                    aria-label="Previous month"
+                    className="flex h-7 w-7 items-center justify-center rounded-md border border-white/10 bg-[#0A0A0A] hover:bg-white/5"
+                  >
+                    <ChevronLeft size={14} strokeWidth={2.5} />
+                  </button>
+                  <button
+                    aria-label="Next month"
+                    className="flex h-7 w-7 items-center justify-center rounded-md border border-white/10 bg-[#0A0A0A] hover:bg-white/5"
+                  >
+                    <ChevronRight size={14} strokeWidth={2.5} />
+                  </button>
+                </div>
+              </div>
+              <div className="grid grid-cols-7 gap-2">
+                {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((d) => (
+                  <div
+                    key={d}
+                    className="py-1 text-center text-[11px] font-semibold text-neutral-400"
+                  >
+                    {d}
+                  </div>
+                ))}
+                {CAL_DAYS.map((d, i) => (
+                  <CalendarCell key={i} day={d} />
+                ))}
+              </div>
+            </div>
+
+            {/* Today's Appointments */}
+            <div>
+              <div className="mb-3.5 text-[15px] font-bold">Today's Appointments</div>
+              <div className="flex flex-col gap-2.5">
+                {APPOINTMENTS.map((a) => (
+                  <AppointmentRow key={a.time} appt={a} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
   );
 }

@@ -22,22 +22,22 @@ const stats = [
     label: "Page views this month",
     value: "1,284",
     icon: Eye,
-    iconColor: "text-blue-500",
-    iconBg: "bg-blue-50",
+    iconColor: "text-blue-400",
+    iconBg: "bg-blue-500/15",
   },
   {
     label: "Bookings from page",
     value: "47",
     icon: CalendarCheck,
-    iconColor: "text-emerald-500",
-    iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-400",
+    iconBg: "bg-emerald-500/15",
   },
   {
     label: "Conversion rate",
     value: "3.7%",
     icon: TrendingUp,
-    iconColor: "text-purple-500",
-    iconBg: "bg-purple-50",
+    iconColor: "text-purple-400",
+    iconBg: "bg-purple-500/15",
   },
 ]
 
@@ -62,11 +62,11 @@ export default function BookingPageDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f2ede6] p-6">
+    <div className="min-h-screen bg-background p-6">
       {/* Header */}
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Your Booking Page</h1>
+          <h1 className="text-2xl font-bold text-white">Your Booking Page</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
             Share this link with your clients
           </p>
@@ -82,14 +82,14 @@ export default function BookingPageDashboard() {
       </div>
 
       {/* Public link */}
-      <div className="mb-4 rounded-2xl bg-white p-5 shadow-sm">
+      <div className="mb-4 rounded-2xl border border-white/10 bg-card p-5">
         <p className="mb-3 text-[11px] font-semibold tracking-widest text-muted-foreground uppercase">
           Your public link
         </p>
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex flex-1 items-center gap-2 rounded-xl border bg-[#f2ede6] px-4 py-2.5">
+          <div className="flex flex-1 items-center gap-2 rounded-xl border border-white/10 bg-muted px-4 py-2.5">
             <ExternalLink size={14} className="shrink-0 text-muted-foreground" />
-            <span className="truncate text-sm font-medium text-gray-800">
+            <span className="truncate text-sm font-medium text-white">
               {displayUrl}
             </span>
           </div>
@@ -99,8 +99,8 @@ export default function BookingPageDashboard() {
             className={cn(
               "flex cursor-pointer items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50",
               copied
-                ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-                : "bg-white text-gray-700 hover:bg-gray-50"
+                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                : "border-white/10 bg-[#1a1a1a] text-white hover:bg-white/5"
             )}
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -110,7 +110,7 @@ export default function BookingPageDashboard() {
             href={publicUrl ? `https://wa.me/?text=Book+your+appointment+at+${encodeURIComponent(publicUrl)}` : "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex cursor-pointer items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+            className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/5"
           >
             <MessageCircle size={14} className="text-green-500" />
             Share on WhatsApp
@@ -119,7 +119,7 @@ export default function BookingPageDashboard() {
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex cursor-pointer items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+            className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/5"
           >
             <Share2 size={14} className="text-pink-500" />
             Share on Instagram
@@ -130,26 +130,26 @@ export default function BookingPageDashboard() {
       {/* Stats */}
       <div className="mb-4 grid grid-cols-3 gap-4">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-2xl bg-white p-5 shadow-sm">
+          <div key={s.label} className="rounded-2xl border border-white/10 bg-card p-5">
             <div className={cn("mb-3 w-fit rounded-lg p-2", s.iconBg)}>
               <s.icon size={18} className={s.iconColor} />
             </div>
-            <p className="text-3xl font-bold text-gray-900">{s.value}</p>
+            <p className="text-3xl font-bold text-white">{s.value}</p>
             <p className="mt-1 text-sm text-muted-foreground">{s.label}</p>
           </div>
         ))}
       </div>
 
       {/* Browser preview */}
-      <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-card">
         {/* Browser chrome */}
-        <div className="flex items-center gap-3 border-b bg-gray-50 px-4 py-3">
+        <div className="flex items-center gap-3 border-b border-white/10 bg-muted px-4 py-3">
           <div className="flex gap-1.5">
             <div className="h-3 w-3 rounded-full bg-red-400" />
             <div className="h-3 w-3 rounded-full bg-amber-400" />
             <div className="h-3 w-3 rounded-full bg-green-400" />
           </div>
-          <div className="flex flex-1 items-center gap-2 rounded-md border bg-white px-3 py-1.5">
+          <div className="flex flex-1 items-center gap-2 rounded-md border border-white/10 bg-[#1a1a1a] px-3 py-1.5">
             <ExternalLink size={11} className="shrink-0 text-muted-foreground" />
             <span className="truncate text-xs text-muted-foreground">
               {displayUrl}
@@ -160,7 +160,7 @@ export default function BookingPageDashboard() {
               href={publicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="cursor-pointer text-xs font-medium text-muted-foreground hover:text-gray-800"
+              className="cursor-pointer text-xs font-medium text-muted-foreground hover:text-white"
             >
               Open full page ↗
             </a>

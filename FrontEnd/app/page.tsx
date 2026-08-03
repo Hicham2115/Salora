@@ -9,6 +9,7 @@ import Reviews from "@/components/MainSection/Reviews"
 import Pricing from "@/components/MainSection/Pricing"
 import FAQ from "@/components/MainSection/FAQ"
 import CTA from "@/components/MainSection/CTA"
+import Contact from "@/components/MainSection/Contact"
 import Footer from "@/components/MainSection/Footer"
 import Navbar from "@/components/MainSection/Navbar"
 
@@ -22,10 +23,11 @@ export default function Page() {
       <TheProblem />
       <WhySalora />
       <HowItWorks />
-      <Features />
+      {/* <Features /> */}
       <Reviews />
       <Pricing />
       <FAQ />
+      <Contact />
       <CTA />
       <Footer />
     </div>
