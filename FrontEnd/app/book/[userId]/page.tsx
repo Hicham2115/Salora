@@ -248,48 +248,48 @@ export default function PublicBookingPage() {
       </header>
 
       {/* ── Hero ──────────────────────────────────────────────── */}
-      <section className="relative flex overflow-hidden border-b bg-card">
+      <section className="relative overflow-hidden border-b bg-card">
         {/* Decorative glow — large circle offset to center-right */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-1/2 left-1/2 h-150 w-150 -translate-x-1/4 -translate-y-1/2 rounded-full bg-primary/8 blur-3xl" />
         </div>
 
-        {/* Left — text content */}
-        <div className="relative flex flex-1 flex-col justify-center px-16 py-16 text-white">
-          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-medium">
-            <span
-              className={cn(
-                "h-2 w-2 rounded-full",
-                isOpen ? "bg-emerald-400" : "bg-red-400"
+        <div className="relative mx-auto flex w-full max-w-6xl flex-wrap items-center justify-center gap-16 px-8 py-16">
+          {/* Left — text content */}
+          <div className="flex max-w-xl flex-col justify-center text-white">
+            <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-medium">
+              <span
+                className={cn(
+                  "h-2 w-2 rounded-full",
+                  isOpen ? "bg-emerald-400" : "bg-red-400"
+                )}
+              />
+              {isOpen ? `Open now ` : "Closed now"}
+            </div>
+            <h1 className="mb-3 text-6xl leading-[1.08] font-extrabold tracking-tight">
+              {salon?.salon_name || "Your Salon"}
+            </h1>
+            <p className="mb-7 text-lg text-white/60">
+              {salon?.salon_about || "Premium salon services"}
+            </p>
+            <div className="flex flex-wrap items-center gap-5 text-sm text-white/60">
+              {reviews.length > 0 && (
+                <span className="flex items-center gap-2">
+                  <Stars count={Math.round(Number(avgRating))} size={16} />
+                  <span className="font-bold text-white">{avgRating}</span>
+                  <span>({reviews.length} reviews)</span>
+                </span>
               )}
-            />
-            {isOpen ? `Open now ` : "Closed now"}
+              {salon?.salon_adresse && (
+                <span className="flex items-center gap-1.5">
+                  <MapPin size={14} className="shrink-0" />
+                  {salon.salon_adresse}
+                </span>
+              )}
+            </div>
           </div>
-          <h1 className="mb-3 text-6xl leading-[1.08] font-extrabold tracking-tight">
-            {salon?.salon_name || "Your Salon"}
-          </h1>
-          <p className="mb-7 text-lg text-white/60">
-            {salon?.salon_about || "Premium salon services"}
-          </p>
-          <div className="flex flex-wrap items-center gap-5 text-sm text-white/60">
-            {reviews.length > 0 && (
-              <span className="flex items-center gap-2">
-                <Stars count={Math.round(Number(avgRating))} size={16} />
-                <span className="font-bold text-white">{avgRating}</span>
-                <span>({reviews.length} reviews)</span>
-              </span>
-            )}
-            {salon?.salon_adresse && (
-              <span className="flex items-center gap-1.5">
-                <MapPin size={14} className="shrink-0" />
-                {salon.salon_adresse}
-              </span>
-            )}
-          </div>
-        </div>
 
-        {/* Right — floating booking widget */}
-        <div className="relative flex shrink-0 items-center px-10 py-12">
+          {/* Right — floating booking widget */}
           <div className="w-[320px] rounded-2xl border border-white/10 bg-[#141414] px-6 py-7 shadow-2xl">
             <p className="mb-0.5 text-base font-bold text-white">
               Book your visit

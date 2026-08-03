@@ -10,6 +10,7 @@ import {
   CalendarCheck,
   TrendingUp,
   Check,
+  MapPin,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -41,6 +42,20 @@ const stats = [
   },
 ]
 
+interface Salon {
+  salon_name: string
+  salon_about: string
+  salon_adresse: string
+  is_open?: boolean
+}
+
+interface Service {
+  id: number
+  name: string
+  duration: number
+  price: number
+}
+
 export default function BookingPageDashboard() {
   const { user } = useUser()
   const [copied, setCopied] = useState(false)
@@ -49,6 +64,28 @@ export default function BookingPageDashboard() {
   useEffect(() => {
     setOrigin(window.location.origin)
   }, [])
+
+  const { data: salonRaw } = useQuery({
+    queryKey: ["owner_data"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/salon_data`
+      )
+      return res.data
+    },
+  })
+  const salon: Salon | null = salonRaw?.data ?? salonRaw ?? null
+
+  const { data: servicesRaw } = useQuery({
+    queryKey: ["services_data"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/services_data`
+      )
+      return res.data
+    },
+  })
+  const services: Service[] = Array.isArray(servicesRaw) ? servicesRaw : []
 
   const publicPath = user?.id ? `/book/${user.id}` : null
   const publicUrl = publicPath ? `${origin}${publicPath}` : ""
@@ -82,7 +119,7 @@ export default function BookingPageDashboard() {
       </div>
 
       {/* Public link */}
-      <div className="mb-4 rounded-2xl border border-white/10 bg-card p-5">
+      <div className="mb-6 rounded-2xl border border-white/10 bg-card p-5">
         <p className="mb-3 text-[11px] font-semibold tracking-widest text-muted-foreground uppercase">
           Your public link
         </p>
@@ -128,7 +165,7 @@ export default function BookingPageDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="mb-4 grid grid-cols-3 gap-4">
+      <div className="mb-6 grid grid-cols-3 gap-4">
         {stats.map((s) => (
           <div key={s.label} className="rounded-2xl border border-white/10 bg-card p-5">
             <div className={cn("mb-3 w-fit rounded-lg p-2", s.iconBg)}>
@@ -140,7 +177,7 @@ export default function BookingPageDashboard() {
         ))}
       </div>
 
-      {/* Browser preview */}
+      {/* Preview mockup */}
       <div className="overflow-hidden rounded-2xl border border-white/10 bg-card">
         {/* Browser chrome */}
         <div className="flex items-center gap-3 border-b border-white/10 bg-muted px-4 py-3">
@@ -167,27 +204,66 @@ export default function BookingPageDashboard() {
           )}
         </div>
 
-        {/* Scaled iframe */}
-        {publicPath ? (
-          <div className="relative overflow-hidden" style={{ height: "580px" }}>
-            <iframe
-              src={publicPath}
-              title="Public booking page preview"
-              style={{
-                width: "1280px",
-                height: "900px",
-                transform: "scale(0.72)",
-                transformOrigin: "top left",
-                pointerEvents: "none",
-                border: "none",
-              }}
-            />
+        {/* Static mockup of the public page's hero */}
+        <div className="relative overflow-hidden bg-[#0e0e0e] px-10 py-14">
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/4 -translate-y-1/2 rounded-full bg-primary/8 blur-3xl" />
           </div>
-        ) : (
-          <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
-            Loading preview…
+
+          <div className="relative flex flex-wrap items-center justify-center gap-10">
+            <div className="flex max-w-sm flex-col">
+              <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-medium">
+                <span
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full",
+                    salon?.is_open ? "bg-emerald-400" : "bg-red-400"
+                  )}
+                />
+                {salon?.is_open ? "Open now" : "Closed now"}
+              </div>
+              <h2 className="mb-2 text-3xl font-extrabold tracking-tight text-white">
+                {salon?.salon_name || "Your Salon"}
+              </h2>
+              <p className="mb-4 text-sm text-white/60">
+                {salon?.salon_about || "Premium salon services"}
+              </p>
+              {salon?.salon_adresse && (
+                <span className="flex items-center gap-1.5 text-xs text-white/60">
+                  <MapPin size={12} className="shrink-0" />
+                  {salon.salon_adresse}
+                </span>
+              )}
+            </div>
+
+            <div className="w-65 shrink-0 rounded-2xl border border-white/10 bg-[#141414] px-5 py-6 shadow-2xl">
+              <p className="mb-3 text-sm font-bold text-white">Book your visit</p>
+              <div className="flex flex-col gap-2">
+                {services.slice(0, 3).map((s) => (
+                  <div
+                    key={s.id}
+                    className="flex items-center justify-between rounded-lg border border-white/10 px-3 py-2"
+                  >
+                    <p className="text-xs font-semibold text-white">{s.name}</p>
+                    <span className="text-sm font-extrabold text-white">
+                      {s.price}{" "}
+                      <span className="text-[10px] font-normal text-muted-foreground">
+                        MAD
+                      </span>
+                    </span>
+                  </div>
+                ))}
+                {services.length === 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    No services yet.
+                  </p>
+                )}
+              </div>
+              <div className="mt-4 w-full rounded-lg bg-primary py-2.5 text-center text-xs font-semibold text-primary-foreground">
+                Book an appointment →
+              </div>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   )
