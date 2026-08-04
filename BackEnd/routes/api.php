@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\PageViewController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OpeningHoursController;
@@ -65,3 +66,7 @@ Route::post('/create_client', [ClientController::class, 'createClient']);
 Route::get('/clients_data', [ClientController::class, 'clientsData']);
 Route::post('/update_client', [ClientController::class, 'updateClient']);
 Route::post('/delete_client', [ClientController::class, 'deleteClient']);
+
+// Page View Routes
+Route::post('/track_page_view', [PageViewController::class, 'trackPageView']);
+Route::get('/page_views_data', [PageViewController::class, 'pageViewsData']);

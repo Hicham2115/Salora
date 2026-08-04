@@ -18,39 +18,17 @@ import { useUser } from "@clerk/nextjs"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
-const stats = [
-  {
-    label: "Page views this month",
-    value: "1,284",
-    icon: Eye,
-    iconColor: "text-blue-400",
-    iconBg: "bg-blue-500/15",
-  },
-  {
-    label: "Bookings from page",
-    value: "47",
-    icon: CalendarCheck,
-    iconColor: "text-emerald-400",
-    iconBg: "bg-emerald-500/15",
-  },
-  {
-    label: "Conversion rate",
-    value: "3.7%",
-    icon: TrendingUp,
-    iconColor: "text-purple-400",
-    iconBg: "bg-purple-500/15",
-  },
-]
-
 export default function BookingPageDashboard() {
   const { user } = useUser()
   const [copied, setCopied] = useState(false)
   const [origin, setOrigin] = useState("")
 
+  // window is undefined during SSR, so the real origin can only be read after mount
   useEffect(() => {
     setOrigin(window.location.origin)
   }, [])
 
+  // Owner Data
   const { data: salonRaw } = useQuery({
     queryKey: ["owner_data"],
     queryFn: async () => {
@@ -60,7 +38,48 @@ export default function BookingPageDashboard() {
       return res.data
     },
   })
+  // Booking Data
+  const { data: bookingRaw } = useQuery({
+    queryKey: ["booking_data"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings_data`
+      )
+      return res.data
+    },
+  })
+
+  // salon_data
   const salon = salonRaw?.data ?? salonRaw ?? null
+  const bookingCount = Array.isArray(bookingRaw?.data)
+    ? bookingRaw.data.length
+    : Array.isArray(bookingRaw)
+      ? bookingRaw.length
+      : 0
+
+  const stats = [
+    {
+      label: "Page views this month",
+      value: "1,284",
+      icon: Eye,
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/15",
+    },
+    {
+      label: "Bookings from page",
+      value: bookingCount,
+      icon: CalendarCheck,
+      iconColor: "text-emerald-400",
+      iconBg: "bg-emerald-500/15",
+    },
+    {
+      label: "Conversion rate",
+      value: "3.7%",
+      icon: TrendingUp,
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/15",
+    },
+  ]
 
   const { data: servicesRaw } = useQuery({
     queryKey: ["services_data"],
