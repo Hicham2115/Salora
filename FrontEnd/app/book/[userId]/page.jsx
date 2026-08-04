@@ -133,6 +133,7 @@ export default function PublicBookingPage() {
       .get(`${API}/api/opening_hours_data`)
       .then((r) => setHours(r.data?.data ?? null))
       .catch(() => {})
+    axios.post(`${API}/api/track_page_view`).catch(() => {})
   }, [])
 
   async function handleReviewSubmit(e) {

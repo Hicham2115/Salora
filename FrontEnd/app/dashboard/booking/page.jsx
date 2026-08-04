@@ -57,10 +57,26 @@ export default function BookingPageDashboard() {
       ? bookingRaw.length
       : 0
 
+  // Page views this month
+  const { data: pageViewsRaw } = useQuery({
+    queryKey: ["page_views_data"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/page_views_data`
+      )
+      return res.data
+    },
+  })
+  const pageViewsCount = pageViewsRaw?.count ?? 0
+  const conversionRate =
+    pageViewsCount > 0
+      ? `${((bookingCount / pageViewsCount) * 100).toFixed(1)}%`
+      : "0%"
+
   const stats = [
     {
       label: "Page views this month",
-      value: "1,284",
+      value: pageViewsCount.toLocaleString(),
       icon: Eye,
       iconColor: "text-blue-400",
       iconBg: "bg-blue-500/15",
@@ -74,7 +90,7 @@ export default function BookingPageDashboard() {
     },
     {
       label: "Conversion rate",
-      value: "3.7%",
+      value: conversionRate,
       icon: TrendingUp,
       iconColor: "text-purple-400",
       iconBg: "bg-purple-500/15",
