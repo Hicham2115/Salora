@@ -202,15 +202,15 @@ export default function BookingPageDashboard() {
             <MessageCircle size={14} className="text-green-500" />
             Share on WhatsApp
           </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/5"
-          >
-            <Share2 size={14} className="text-pink-500" />
-            Share on Instagram
-          </a>
+          {/* <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/5"
+            >
+              <Share2 size={14} className="text-pink-500" />
+              Share on Instagram
+            </a> */}
         </div>
       </div>
 

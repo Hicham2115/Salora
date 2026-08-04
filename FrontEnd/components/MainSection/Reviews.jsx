@@ -41,14 +41,14 @@ const reviews = [
     text: "My clients book at midnight, on Sundays, while I'm sleeping. I wake up to a full schedule. That's what Salora gives you — freedom.",
     highlight: false,
   },
-  {
-    name: "Omar Cherkaoui",
-    salon: "Classic Gents — Tangier",
-    avatar: "OC",
-    rating: 5,
-    text: "Switched from a paper diary in January. Can't imagine going back. The client history alone saves me 20 minutes a day — I know exactly what each person wants.",
-    highlight: false,
-  },
+  // {
+  //   name: "Omar Cherkaoui",
+  //   salon: "Classic Gents — Tangier",
+  //   avatar: "OC",
+  //   rating: 5,
+  //   text: "Switched from a paper diary in January. Can't imagine going back. The client history alone saves me 20 minutes a day — I know exactly what each person wants.",
+  //   highlight: false,
+  // },
 ]
 
 function Stars({ count }) {
@@ -142,9 +142,7 @@ export default function Reviews() {
                   </div>
                   <div>
                     <p className="text-sm font-bold text-white">{r.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {r.salon}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{r.salon}</p>
                   </div>
                 </div>
               </div>

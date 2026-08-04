@@ -82,15 +82,9 @@ function Stars({ count, size = 14 }) {
   )
 }
 
-/* Fake portfolio tiles (no portfolio API on public routes yet) */
-const PORTFOLIO_TILES = [
-  "Classic Fade",
-  "Beard Sculpt",
-  "Skin Fade",
-  "Razor Finish",
-  "Line Up",
-  "Full Groom",
-]
+function imageUrl(path) {
+  return `${process.env.NEXT_PUBLIC_API_URL}/storage/${path}`
+}
 
 /* ─── Page ───────────────────────────────────────────────────────── */
 export default function PublicBookingPage() {
@@ -98,6 +92,7 @@ export default function PublicBookingPage() {
   const [services, setServices] = useState([])
   const [reviews, setReviews] = useState([])
   const [hours, setHours] = useState(null)
+  const [portfolio, setPortfolio] = useState([])
   const [activeCategory, setActiveCategory] = useState("All")
   const [mapActive, setMapActive] = useState(false)
 
@@ -132,6 +127,10 @@ export default function PublicBookingPage() {
     axios
       .get(`${API}/api/opening_hours_data`)
       .then((r) => setHours(r.data?.data ?? null))
+      .catch(() => {})
+    axios
+      .get(`${API}/api/portfolio_images_data`)
+      .then((r) => setPortfolio(Array.isArray(r.data) ? r.data : []))
       .catch(() => {})
     axios.post(`${API}/api/track_page_view`).catch(() => {})
   }, [])
@@ -347,35 +346,32 @@ export default function PublicBookingPage() {
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xl font-bold text-white">Our work</h2>
               <span className="text-sm text-muted-foreground">
-                {PORTFOLIO_TILES.length} photos
+                {portfolio.length} photos
               </span>
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              {PORTFOLIO_TILES.map((name, i) => (
-                <div
-                  key={name}
-                  className={cn(
-                    "flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-white/10",
-                    i % 3 === 2 ? "bg-primary/10" : "bg-card"
-                  )}
-                >
-                  <ImageIcon
-                    size={28}
-                    className={cn(
-                      i % 3 === 2 ? "text-primary" : "text-white/30"
-                    )}
-                  />
-                  <span
-                    className={cn(
-                      "text-sm font-medium",
-                      i % 3 === 2 ? "text-primary" : "text-muted-foreground"
-                    )}
+            {portfolio.length === 0 ? (
+              <div className="flex aspect-3/1 flex-col items-center justify-center gap-2 rounded-2xl border border-white/10 bg-card">
+                <ImageIcon size={28} className="text-white/30" />
+                <span className="text-sm text-muted-foreground">
+                  No photos yet.
+                </span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-3">
+                {portfolio.map((item) => (
+                  <div
+                    key={item.id}
+                    className="aspect-square overflow-hidden rounded-2xl border border-white/10 bg-card"
                   >
-                    {name}
-                  </span>
-                </div>
-              ))}
-            </div>
+                    <img
+                      src={imageUrl(item.image_path)}
+                      alt={item.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
 
           {/* Services & pricing */}
