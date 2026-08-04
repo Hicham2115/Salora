@@ -51,11 +51,6 @@ export default function BookingPageDashboard() {
 
   // salon_data
   const salon = salonRaw?.data ?? salonRaw ?? null
-  const bookingCount = Array.isArray(bookingRaw?.data)
-    ? bookingRaw.data.length
-    : Array.isArray(bookingRaw)
-      ? bookingRaw.length
-      : 0
 
   // Page views this month
   const { data: pageViewsRaw } = useQuery({
@@ -109,13 +104,6 @@ export default function BookingPageDashboard() {
       icon: TrendingUp,
       iconColor: "text-purple-400",
       iconBg: "bg-purple-500/15",
-    },
-    {
-      label: "Bookings from page all time",
-      value: bookingCount,
-      icon: CalendarCheck,
-      iconColor: "text-amber-400",
-      iconBg: "bg-amber-500/15",
     },
   ]
 
@@ -215,7 +203,7 @@ export default function BookingPageDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="mb-6 grid grid-cols-4 gap-4">
+      <div className="mb-6 grid grid-cols-3 gap-4">
         {stats.map((s) => (
           <div
             key={s.label}
