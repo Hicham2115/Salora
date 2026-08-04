@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OpeningHoursController;
 use App\Http\Controllers\ReviewsController;
@@ -52,6 +53,12 @@ Route::post('/create_service', [ServiceController::class, 'createService']);
 Route::get('/services_data', [ServiceController::class, 'servicesData']);
 Route::post('/update_service', [ServiceController::class, 'updateService']);
 Route::post('/delete_service', [ServiceController::class, 'deleteService']);
+
+// Portfolio Routes
+Route::post('/create_portfolio_image', [PortfolioController::class, 'createPortfolioImage']);
+Route::get('/portfolio_images_data', [PortfolioController::class, 'portfolioImagesData']);
+Route::post('/update_portfolio_image', [PortfolioController::class, 'updatePortfolioImage']);
+Route::post('/delete_portfolio_image', [PortfolioController::class, 'deletePortfolioImage']);
 
 // Client Routes
 Route::post('/create_client', [ClientController::class, 'createClient']);

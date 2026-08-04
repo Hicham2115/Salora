@@ -1,0 +1,51 @@
+import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google"
+
+import "./globals.css"
+import { cn } from "@/lib/utils"
+import { ClerkProvider } from "@clerk/nextjs"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { Toaster } from "@/components/ui/sonner"
+import { Providers } from "./providers"
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
+
+const fontMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+})
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-jakarta",
+})
+
+export const metadata = {
+  title: "Salon Booking SaaS",
+  description:
+    "Manage salon bookings, appointments, payments, and clients in one modern platform.",
+}
+export default function RootLayout({ children }) {
+  return (
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn(
+        "antialiased",
+        fontMono.variable,
+        "font-sans",
+        geist.variable,
+        jakarta.variable
+      )}
+    >
+      <body className="bg-background">
+        <ClerkProvider>
+          <Providers>
+            <TooltipProvider>{children}</TooltipProvider>
+            <Toaster />
+          </Providers>
+        </ClerkProvider>
+      </body>
+    </html>
+  )
+}

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   Dialog,
   DialogContent,
@@ -45,8 +45,12 @@ const TIME_SLOTS = [
   "17:30",
 ]
 
-function BookingPopUp({ open, onOpenChange }) {
+/**
+ * @param {{ open: boolean, onOpenChange: (open: boolean) => void, booking?: any }} props
+ */
+function BookingPopUp({ open, onOpenChange, booking = null }) {
   const queryClient = useQueryClient()
+  const isEdit = Boolean(booking)
 
   const [clientName, setClientName] = useState("")
   const [phone, setPhone] = useState("")
@@ -84,6 +88,31 @@ function BookingPopUp({ open, onOpenChange }) {
 
   const selectedService = services.find((s) => String(s.id) === serviceId)
 
+  // Prefill the form when opening in edit mode
+  useEffect(() => {
+    if (open && booking) {
+      setClientName(booking.client_name || "")
+      setPhone(booking.phone || "")
+      setNotes(booking.notes || "")
+      setDate(booking.date ? new Date(`${booking.date}T00:00:00`) : undefined)
+      setTime(booking.time || TIME_SLOTS[4])
+    }
+  }, [open, booking])
+
+  useEffect(() => {
+    if (booking && services.length) {
+      const match = services.find((s) => s.name === booking.service)
+      if (match) setServiceId(String(match.id))
+    }
+  }, [booking, services])
+
+  useEffect(() => {
+    if (booking && staff.length) {
+      const match = staff.find((s) => s.staff_name === booking.staff)
+      if (match) setStaffId(String(match.id))
+    }
+  }, [booking, staff])
+
   const createMutation = useMutation({
     mutationFn: (payload) =>
       axios.post(
@@ -100,6 +129,25 @@ function BookingPopUp({ open, onOpenChange }) {
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to create booking")
+    },
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: (payload) =>
+      axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/update_booking`,
+        payload
+      ),
+    onSuccess: async (_, vars) => {
+      await queryClient.refetchQueries({ queryKey: ["bookings_data"] })
+      toast.success("Booking updated", {
+        description: `Changes to ${vars.client_name}'s appointment have been saved.`,
+      })
+      resetForm()
+      onOpenChange(false)
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to update booking")
     },
   })
 
@@ -134,7 +182,7 @@ function BookingPopUp({ open, onOpenChange }) {
 
     const selectedStaff = staff.find((s) => String(s.id) === staffId)
 
-    createMutation.mutate({
+    const payload = {
       client_name: clientName.trim(),
       phone: phone.trim() || null,
       service: selectedService?.name ?? "",
@@ -143,10 +191,17 @@ function BookingPopUp({ open, onOpenChange }) {
       time,
       duration: selectedService?.duration ?? 30,
       price: selectedService?.price ?? 0,
-      status: "pending",
       notes: notes.trim() || null,
-    })
+    }
+
+    if (isEdit) {
+      updateMutation.mutate({ id: booking.id, ...payload })
+    } else {
+      createMutation.mutate({ ...payload, status: "pending" })
+    }
   }
+
+  const isPending = isEdit ? updateMutation.isPending : createMutation.isPending
 
   return (
     <Dialog
@@ -159,10 +214,12 @@ function BookingPopUp({ open, onOpenChange }) {
       <DialogContent className="max-w-225 gap-0 overflow-hidden p-0">
         <DialogHeader className="border-b px-6 pt-6 pb-4">
           <DialogTitle className="text-lg font-semibold">
-            New booking
+            {isEdit ? "Edit booking" : "New booking"}
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
-            Add an appointment manually to the calendar
+            {isEdit
+              ? "Update this client's appointment"
+              : "Add an appointment manually to the calendar"}
           </DialogDescription>
         </DialogHeader>
 
@@ -320,22 +377,24 @@ function BookingPopUp({ open, onOpenChange }) {
           )} */}
 
           {/* SMS checkbox */}
-          <label className="flex cursor-pointer items-center gap-2 select-none">
-            <div
-              onClick={() => setSendSms((v) => !v)}
-              className={cn(
-                "flex h-4 w-4 items-center justify-center rounded border transition-colors",
-                sendSms
-                  ? "border-[#1b4331] bg-[#1b4331]"
-                  : "border-input bg-background"
-              )}
-            >
-              {sendSms && (
-                <Check size={11} className="text-white" strokeWidth={3} />
-              )}
-            </div>
-            <span className="text-sm">Send confirmation SMS to client</span>
-          </label>
+          {!isEdit && (
+            <label className="flex cursor-pointer items-center gap-2 select-none">
+              <div
+                onClick={() => setSendSms((v) => !v)}
+                className={cn(
+                  "flex h-4 w-4 items-center justify-center rounded border transition-colors",
+                  sendSms
+                    ? "border-[#1b4331] bg-[#1b4331]"
+                    : "border-input bg-background"
+                )}
+              >
+                {sendSms && (
+                  <Check size={11} className="text-white" strokeWidth={3} />
+                )}
+              </div>
+              <span className="text-sm">Send confirmation SMS to client</span>
+            </label>
+          )}
         </div>
 
         {/* Footer */}
@@ -353,9 +412,15 @@ function BookingPopUp({ open, onOpenChange }) {
           <Button
             className="cursor-pointer gap-2 bg-[#1b4331] py-5 text-white"
             onClick={handleSubmit}
-            disabled={createMutation.isPending}
+            disabled={isPending}
           >
-            {createMutation.isPending ? "Creating..." : "Create booking"}
+            {isEdit
+              ? isPending
+                ? "Saving..."
+                : "Save changes"
+              : isPending
+                ? "Creating..."
+                : "Create booking"}
             <Check size={14} />
           </Button>
         </div>
