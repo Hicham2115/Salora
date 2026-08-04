@@ -68,9 +68,24 @@ export default function BookingPageDashboard() {
     },
   })
   const pageViewsCount = pageViewsRaw?.count ?? 0
+
+  // Conversion rate compares bookings and page views from the same month
+  const bookingList = Array.isArray(bookingRaw?.data)
+    ? bookingRaw.data
+    : Array.isArray(bookingRaw)
+      ? bookingRaw
+      : []
+  const now = new Date()
+  const monthlyBookingCount = bookingList.filter((b) => {
+    const createdAt = new Date(b.created_at)
+    return (
+      createdAt.getMonth() === now.getMonth() &&
+      createdAt.getFullYear() === now.getFullYear()
+    )
+  }).length
   const conversionRate =
     pageViewsCount > 0
-      ? `${((bookingCount / pageViewsCount) * 100).toFixed(1)}%`
+      ? `${((monthlyBookingCount / pageViewsCount) * 100).toFixed(1)}%`
       : "0%"
 
   const stats = [
@@ -82,8 +97,8 @@ export default function BookingPageDashboard() {
       iconBg: "bg-blue-500/15",
     },
     {
-      label: "Bookings from page",
-      value: bookingCount,
+      label: "Bookings from page this month",
+      value: monthlyBookingCount,
       icon: CalendarCheck,
       iconColor: "text-emerald-400",
       iconBg: "bg-emerald-500/15",
@@ -94,6 +109,13 @@ export default function BookingPageDashboard() {
       icon: TrendingUp,
       iconColor: "text-purple-400",
       iconBg: "bg-purple-500/15",
+    },
+    {
+      label: "Bookings from page all time",
+      value: bookingCount,
+      icon: CalendarCheck,
+      iconColor: "text-amber-400",
+      iconBg: "bg-amber-500/15",
     },
   ]
 
@@ -193,7 +215,7 @@ export default function BookingPageDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="mb-6 grid grid-cols-3 gap-4">
+      <div className="mb-6 grid grid-cols-4 gap-4">
         {stats.map((s) => (
           <div
             key={s.label}
